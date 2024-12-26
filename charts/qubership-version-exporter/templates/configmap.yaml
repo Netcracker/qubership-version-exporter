@@ -1,0 +1,16 @@
+{{- if and .Values.versionExporter.install }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "qubership-version-exporter.fullname" . }}
+  labels:
+    app: {{ template "qubership-version-exporter.name" . }}
+    app.kubernetes.io/name: {{ template "qubership-version-exporter.name" . }}
+data:
+  {{- if .Values.versionExporter.exporterConfig }}
+  exporterConfig.yaml: |-
+    {{- toYaml .Values.versionExporter.exporterConfig | nindent 4 }}
+  {{- else }}
+  exporterConfig.yaml: ""
+  {{- end }}
+{{- end }}

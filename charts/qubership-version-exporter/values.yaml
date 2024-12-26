@@ -1,0 +1,544 @@
+# Default values for qubership-version-exporter.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Provide a name in place of qubership-version-exporter for `app:` labels
+nameOverride: ""
+# Provide a name to substitute for the full names of resources
+fullnameOverride: ""
+
+versionExporter:
+  install: true
+
+  ## A name of a microservice to deploy with.
+  # This name will be used as name of the microservice deployment and in labels.
+  name: qubership-version-exporter
+
+  # Type: integer
+  # Mandatory: no
+  # Default: 9100
+  #
+  containerPort: 9100
+
+  # A docker image to use for qubership-version-exporter deployment.
+  # Type: string
+  # Mandatory: yes
+  #
+  image: ghcr.io/netcracker/qubership-version-exporter:main
+
+  # Image pull policy to use for qubership-version-exporter deployment
+  imagePullPolicy: IfNotPresent
+
+  ## Number of created pods.
+  # Type: integer
+  # Mandatory: no
+  # Default: 1
+  #
+  replicas: 1
+
+  serviceAccount:
+    # Specifies whether a service account should be created
+    create: true
+    # Annotations to add to the service account
+    annotations: {}
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: "version-exporter"
+
+  ## The resources describe compute resource requests and limits for single Pod.
+  ## Ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  # Type: object
+  # Mandatory: no
+  resources: {}
+  #  limits:
+  #    cpu: 200m
+  #    memory: 200Mi
+  #  requests:
+  #    cpu: 100m
+  #    memory: 100Mi
+
+  # Security Context for a container.
+  # Type: object
+  # Mandatory: no
+  #
+  containerSecurityContext: {}
+
+  # SecurityContext holds pod-level security attributes.
+  # The parameters are required if a Pod Security Policy is enabled
+  #  for Kubernetes cluster and required if a Security Context Constraints is enabled
+  # for Openshift cluster.
+  #
+  # Mandatory: no
+  securityContext: {}
+    # The UID to run the entrypoint of the container process.
+    # Defaults to user specified in image metadata if unspecified.
+    #
+    # Mandatory: no
+    # runAsUser: 2000
+
+    # A special supplemental group that applies to all containers in a pod.
+    # Some volume types allow the Kubelet to change the ownership of that volume
+    # to be owned by the pod:
+    #   1. The owning GID will be the FSGroup
+    #   2. The setgid bit is set (new files created in the volume will be owned by FSGroup)
+    #   3. The permission bits are OR'd with rw-rw----
+    # If unset, the Kubelet will not modify the ownership and permissions of any volume.
+    #
+    # Mandatory: no
+    # fsGroup: 2000
+
+  # Additional arguments for version-exporter container.
+  # Type: list[string]
+  # Mandatory: no
+  # Default: []
+  #
+  extraArgs: []
+  #  - "--web.listen-address=:9100"
+  #  - "--web.telemetry-path=/metrics"
+  #  - "--web.max-requests=40"
+
+  ## A name of a microservice secret to deploy with.
+  # This name will be used as name of the microservice secret deployment.
+  secretName: version-exporter-secret
+
+  # Allows set extra system environment variables for Version-exporter into the Secret.
+  # Type: object
+  # Mandatory: no
+  # Default: {}
+  #
+  extraVarsSecret: {}
+    # pgUsername:
+    # pgPassword:
+    # httpRequest1Username:
+    # httpRequest1Password:
+    # httpRequest2Token:
+    # sshLogin:
+    # privateKey:
+
+  # Service configuration for version-exporter
+  # Type: object
+  # Mandatory: no
+  #
+  service:
+    # Type of version-exporter service
+    # Type: string
+    # Mandatory: no
+    # Default: ClusterIP
+    #
+    type: ClusterIP
+
+    # Port of version-exporter which use in service
+    # Type: int
+    # Mandatory: no
+    # Default: 9100
+    #
+    port: 9100
+
+    # Port name of version-exporter which use in service
+    # Type: string
+    # Mandatory: no
+    # Default: http
+    #
+    portName: http
+
+    # Annotations set which will create in service
+    # Type: map[string]string
+    # Mandatory: no
+    # Default: {}
+    #
+    annotations: {}
+
+    # Labels set which will create in service
+    # Type: map[string]string
+    # Mandatory: no
+    # Default: {}
+    #
+    labels: {}
+
+  serviceMonitor:
+    # If true, a ServiceMonitor is created for a `version-exporter`.
+    # Type: boolean
+    # Mandatory: no
+    # Default: true
+    #
+    enabled: true
+
+    # Scraping interval for Prometheus.
+    # Type: string
+    # Mandatory: no
+    # Default: 5m
+    #
+    interval: 2m
+
+    # Set path to version-exporter telemtery-path
+    telemetryPath: /metrics
+
+    # Allow change metrics scrape timeout.
+    # Type: string
+    # Mandatory: no
+    #
+    # Please note that scrapeTimeout must be less the interval
+    scrapeTimeout: 30s
+
+  # Allows creating Grafana dashboard for version-exporter
+  # Type: boolean
+  # Mandatory: no
+  # Default: true
+  #
+  grafanaDashboard: true
+
+  # Additional Exporter Config.
+  exporterConfig:
+    configmap_collector:
+      defaults:
+        description: Metric shows version collected from configmaps
+        metricName: configmap_collected_versions
+        namespaces: []
+        resourceLabels: {}
+        type: configmap
+        labels:
+          - name: key_label
+            keyRegexp: "[a-z0-9.]*"
+          - name: value_label
+            valueRegexp: ".*"
+      resources:
+        - name: version
+#    postgres_collector:
+#      connections:
+#        # Form postgres url, like
+#        # postgres://postgres:password@pg-patroni.postgres12.svc:5432/postgres?sslmode=disable
+#        - host: pg-patroni.postgres-service.svc
+#          port: 5432
+#          credentials:
+#            username:
+#              key: pgUsername
+#              name: version-exporter-secret
+#            password:
+#              key: pgPassword
+#              name: version-exporter-secret
+#          db: postgres
+#          # Valid time units are "ns", "us" (or "µs"), "ms", "s", "m", "h".
+#          timeout: 10s
+#          requests:
+#            - sql: select version()
+#              metricName: postgres_build_info
+#              metrics:
+#                # Either 'Label' or 'Regexp' field must not be empty
+#                - fieldName: version
+#                  valueRegexp: \s((?P<major>\d+).(?P<minor>\d+))\son\s(?P<platform>.*?),
+#                  #valueRegexp: \s((\d+).(\d+))\son\s(.*?),
+#            - sql: select extname, extversion, extnamespace from pg_extension
+#              metricName: postgres_build_info
+#              metrics:
+#                - fieldName: extname
+#                  label: extension_name
+#                  valueRegexp:
+#                - fieldName: extversion
+#                  label: extension_version
+#                - fieldName: extnamespace
+#                  label: extension_namespace
+#            - sql: show server_version
+#              metricName: postgres_build_version__info
+#              metrics:
+#                - field_name: server_version
+#                  label: pg_server_version
+#                  value_regexp: ((\d+).(\d+))
+#    http_collector:
+#      connections:
+#          ## Url part of REST request (protocol, domain ant port)
+#          # Type: string
+#          # Mandatory: yes
+#          #
+#        - url: https://dashboard.ci-main.qubership.org:6443
+#
+#          ## TLS configuration for requests
+#          # Type: object
+#          # Mandatory: yes
+#          #
+#          tlsConfig:
+#
+#            ## Flag to skip certificates check. If true, certName and certKey ignored
+#            # Type: boolean
+#            # Mandatory: no
+#            # Default: false
+#            #
+#            # tlsSkip: false
+#
+#            ## Secret name and key where Certificate Authority is stored
+#            # Type: object
+#            # Mandatory: yes, if tlsSkip = false
+#            #
+#            ca:
+#              key: cert-ca.pem
+#              name: secret-certificate
+#
+#            ## Secret name and key where Certificate signing request is stored
+#            # Type: object
+#            # Mandatory: no
+#            #
+#            #cert:
+#            #  key: cert.crt
+#           #  name: secret-certificate
+#
+#            ## Secret name and key where private key is stored
+#            # Type: object
+#            # Mandatory: no
+#            #
+#            #pkey:
+#            #  key: cert.key
+#            #  name: secret-certificate
+#          ## Credentials for authentication. Basic auth or token data should be provided
+#          # Type: object
+#          # Mandatory: yes
+#          #
+#          credentials:
+#            username:
+#              key: httpRequest1Username
+#              name: version-exporter-extra-vars-secret
+#            password:
+#              key: httpRequest1Password
+#              name: version-exporter-extra-vars-secret
+#            token:
+#              key: httpRequest2Token
+#              name: version-exporter-extra-vars-secret
+#          ## Paths of REST requests with processing parameters
+#          # Type: list[object]
+#          # Mandatory: yes
+#          #
+#          requests:
+#              ## Path and parameters of REST request (without protocol, domain ant port)
+#              # Type: string
+#              # Mandatory: yes
+#              #
+#            - path: /version
+#
+#              ## Method of REST request
+#              # Type: string
+#              # Mandatory: yes
+#              # Possible values: get/post
+#              #
+#              method: get
+#
+#              ## Name of new Prometheus metric
+#              # Type: string
+#              # Mandatory: yes
+#              # Default: "http_collected_versions"
+#              #
+#              # metricName: "http_collected_versions"
+#
+#              ## Description of new Prometheus metric
+#              # Type: string
+#              #
+#             # description: ""
+#
+#              ## Labels of new Prometheus metric
+#              # Type: list[object]
+#              # Mandatory: yes
+#              #
+#              metrics:
+#                   ## JsonPath expression applied to response of Content-Type "application/json"
+#                   # Type: string
+#                   # Mandatory: no
+#                   #
+#                 -  jsonPath: "{.anyJsonPath.buildDate}"
+#                    labels:
+#                       ## Name of label of new Prometheus metric
+#                       # Type: string
+#                       # Mandatory: yes
+#                       #
+#                      - name: buildDate
+#                       ## Regular expression applied to results of JsonPath search or to response of Content-Type "text/plain"
+#                       # HTTP Collector uses the built-in package "regexp". More info: https://pkg.go.dev/regexp
+#                       # Type: string
+#                       # Mandatory: no
+#                       # Default: ".*"
+#                       #
+#                       valueRegexp: "[a-z0-9.]*"
+#
+#                  ## Regular expression applied to results of JsonPath search or to response of Content-Type "text/plain"
+#                  # HTTP Collector uses the built-in package "regexp". More info: https://pkg.go.dev/regexp
+#                  # Type: string
+#                  # Mandatory: no
+#                  # Default: ".*"
+#                  #
+#                  # valueRegexp: "[a-z0-9.]*"
+#    configmap_collector:
+#      # Default values for configuration. Can be override in the resources section for each resource.
+#      # Most of fields in this section are mandatory.
+#      # Type: object
+#      # Mandatory: yes
+#      #
+#      defaults:
+#        # Type of k8s resource. Allowed values: configmap, secret.
+#        # Type: string
+#        # Mandatory: yes
+#        #
+#        type: configmap
+#
+#        # Namespaces in which to search for resources. Use empty list to search in all namespaces.
+#        # Type: list[string]
+#        # Mandatory: yes
+#        #
+#        namespaces: []
+#
+#        # Allows to search resources by k8s labels instead of names. If resourceLabels is not empty,
+#        # the search is carried out by labels, and not by the name of the resource.
+#        # Type: map[string]string
+#        # Mandatory: yes
+#        #
+#        resourceLabels: {}
+#
+#        # Name of new Prometheus metric.
+#        # Type: string
+#        # Mandatory: yes
+#        #
+#        # metricName: ""
+#
+#        # Description of new Prometheus metric.
+#        # Type: string
+#        # Mandatory: yes
+#        #
+#        # description: ""
+#
+#        # Labels of new Prometheus metric.
+#        # Type: list[object]
+#        # Mandatory: yes
+#        #
+#        labels:
+#          # Name of label of new Prometheus metric. Value for this label will be taken with keyRegexp or valueRegexp.
+#          # Must be unique.
+#          # Type: string
+#          # Mandatory: yes
+#          #
+#          - name: buildDate
+#
+#          # Regular expression that will be used to find version information in keys of fields in Data from found
+#          # ConfigMap or Secret. Each labels item must contain either the keyRegexp or the valueRegexp, but not both.
+#          # Type: string
+#          # Mandatory: no
+#          #
+#          # keyRegexp: ""
+#
+#          # Regular expression that will be used to find version information in values of fields in Data from found
+#          # ConfigMap or Secret. Each labels item must contain either the keyRegexp or the valueRegexp, but not both.
+#          # Type: string
+#          # Mandatory: no
+#          # Default: ".*"
+#          #
+#          # valueRegexp: "[a-z0-9.]*"
+#
+#    ssh_collector:
+#      connections:
+#        - host: x.x.x.x
+#          port: 22
+#          network: tcp
+#          # Valid time units are "ns", "us" (or "µs"), "ms", "s", "m", "h".
+#          timeout: 5s
+#          k8sCredentials:
+#            login:
+#              key: sshLogin
+#              name: version-exporter-extra-vars-secret
+#            pkey:
+#              key: privKey
+#              name: version-exporter-extra-vars-secret
+#          requests:
+#            - cmd: "head /etc/os-release"
+#              metricName: "os_versions_metric"
+#              labels:
+#                - name: os_version
+#                  valueRegexp: "[a-z0-9.]*"
+#                - name: name
+#                  valueRegexp: "[^a-zA-Z0-9]"
+#            - cmd: 'tail /etc/ssh/ssh_config'
+#              metricName: "ssh_versions_metric"
+#              description: "Metric shows versions of ssh component"
+#              labels:
+#                - name: ssh_version
+#                  valueRegexp: "[^a-zA-Z0-9]"
+#            - cmd: 'cat /etc/ssh/ssh_config'
+#              metricName: "ssh_ver_metric"
+#              description: "Metric shows versions of ssh component"
+#              labels:
+#                - name: version
+#                  valueRegexp: "[^a-zA-Z0-9]"
+#        - host: x.x.x.x
+#          port: 22
+#          network: tcp
+#          # Valid time units are "ns", "us" (or "µs"), "ms", "s", "m", "h".
+#          timeout: 5s
+#          k8sCredentials:
+#            login:
+#              key: sshLogin
+#              name: version-exporter-extra-vars-secret
+#            pkey:
+#              key: privKey
+#              name: version-exporter-extra-vars-secret
+#          requests:
+#            - cmd: 'printenv'
+#              metricName: "os_versions_metric"
+#              labels:
+#                - name: os_version
+#                  valueRegexp: "(?P<version>[a-z0-9.]*)"
+#                - name: name
+#                  valueRegexp: "(?P<name>[^a-zA-Z0-9])"
+#            - cmd: 'nl /etc/ssh/ssh_config'
+#              metricName: "ssh_versions_metric"
+#              description: "Metric shows versions of ssh component"
+#              labels:
+#                - name: ssh_version
+#                  valueRegexp: "[^a-zA-Z0-9]"
+#            - cmd: 'hostname --fqdn'
+#              metricName: "hostname_metric"
+#              labels:
+#                - name: version
+#                  valueRegexp: "[^a-zA-Z0-9]"
+
+#      # Each resource must contain the name parameter. If resourceLabels is empty, resource will be searched by name.
+#      # Other fields are optional and override values from defaults section.
+#      # Configuration must contain at least one item in this list.
+#      # Type: list[object]
+#      # Mandatory: yes
+#      #
+#      resources:
+#        # Name of resource. If resourceLabels is NOT empty, name parameter will not be used to find resources.
+#        # This parameter must be unique for each item in this list.
+#        # Type: string
+#        # Mandatory: yes
+#        #
+#        - name: version
+#
+#          type: configmap
+#          namespaces: []
+#          resourceLabels: {}
+#          metricName: "http_collected_versions"
+#          description: ""
+#          labels:
+#            - name: label
+#              keyRegexp: ""
+#              valueRegexp: ""
+
+
+  ## Tolerations allow the pods to schedule onto nodes with matching taints.
+  # Type: object
+  # Mandatory: no
+  #
+  tolerations: []
+
+  ## Allow define which Nodes the Pods are scheduled on.
+  # Type: map[string]
+  # Mandatory: no
+  # Default: not set
+  #
+  nodeSelector: {}
+
+  # If specified, the pod's scheduling constraints
+  # More info: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#affinity-v1-core
+  # Type: object
+  # Mandatory: no
+  # Default: not set
+  #
+  affinity: {}
+
+  annotations: {}
+
+  labels: {}

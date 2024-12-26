@@ -1,0 +1,76 @@
+http_collector:
+  connections:
+    - url: https://www.example.com
+      tlsConfig:
+        tlsSkip: false
+        ca:
+          key: cert-ca.pem
+          name: secret-certificate-authority
+      credentials:
+        username:
+          key: user
+          name: secret-name
+        password:
+          key: password
+          name: secret-name
+      requests:
+        - path: /versions
+          method: get
+          metrics:
+            - jsonPath: $.system_versions.platform
+              labels:
+                - name: systemPlatform
+            - jsonPath: $.system_versions.platform
+              labels:
+                - name: system
+        - path: /product_versions
+          method: get
+          metricName: "versions_ci_metric"
+          metrics:
+            - jsonPath: $.system_versions.platform
+              labels:
+                - name: systemPlatform
+            - jsonPath: '{^..platform}'
+              labels:
+                - name: platform
+                  valueRegexp: "[a-zA-Z.]*"
+        - path: /project_versions
+          metricName: "versions_project_metric"
+          method: get
+        - path: /java_info
+          method: get
+          metricName: "java_info_versions"
+          metrics:
+        - path: /thirdparty_versions
+          method: get
+          metricName: "thirdparty_versions"
+          metrics:
+            - labels:
+                - name: "$platform!"
+                  valueRegexp: "[^a-zA-Z0-9"
+            - labels:
+                - name: java
+                  valueRegexp: "[^a-zA-Z0-9]*"
+        - path: /other_versions
+          method: get
+          metricName: "other_versions"
+          metrics:
+            - jsonPath: "{range .plugins[*]}{.name}{.version}{end}"
+              labels:
+                - name: "name"
+        - path: /hf_versions
+          method: get
+          metricName: "hf_versions"
+          metrics:
+            - jsonPath: "{.plugins[*]['.name','.version']}"
+              labels:
+                - name: "name"
+        - path: /platform_versions
+          method: get
+          metricName: "platform_versions"
+          metrics:
+            - jsonPath: "{.plugins[*]['.name','.version']}"
+              labels:
+                - name: "name"
+                - name: "version"
+                - name: "version1"

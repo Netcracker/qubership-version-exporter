@@ -1,0 +1,36 @@
+postgres_collector:
+  connections:
+    - host: Aa#%&BbCc
+      port: 5432
+      credentials:
+        username:
+          key: pgUsername
+          name: version-exporter-extra-vars-secret
+        password:
+          key: pgPassword
+          name: version-exporter-extra-vars-secret
+      db: postgres
+      # Valid time units are "ns", "us" (or "µs"), "ms", "s", "m", "h".
+      timeout: 10s
+      requests:
+        - sql: select version()
+          metricName: postgres_build_info
+          metrics:
+            # If metric exists, 'fieldName' must be present and either 'label' or 'valueRegexp' field must not be empty
+            - fieldName: version
+              label:
+              valueRegexp: \s((?P<major>\d+).(?P<minor>\d+))\son\s(?P<platform>.*?),
+        - sql: select extname, extversion from pg_extension
+          metricName: postgres_build_info
+          metrics:
+            - fieldName: extname
+              label: extension_name
+              valueRegexp:
+            - fieldName: extversion
+              label: extension_version
+        - sql: show server_version
+          metricName: postgres_build_info
+          metrics:
+            - fieldName: server_version
+              label: pg_server_version
+              valueRegexp: ((\d+).(\d+))

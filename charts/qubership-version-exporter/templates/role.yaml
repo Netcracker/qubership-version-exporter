@@ -1,0 +1,43 @@
+{{- if .Values.versionExporter.install }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "qubership-version-exporter.fullname" . }}
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+      - services
+      - services/finalizers
+      - endpoints
+      - persistentvolumeclaims
+      - events
+      - configmaps
+      - configmap
+      - secrets
+      - serviceaccounts
+    verbs:
+      - get
+      - list
+  - apiGroups:
+      - "apps"
+    resources:
+      - deployments
+      - deployments/finalizers
+      - daemonsets
+      - replicasets
+      - statefulsets
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - "apiregistration.k8s.io"
+    resources:
+      - apiservices
+    verbs:
+      - get
+      - list
+      - watch
+ {{- end }}

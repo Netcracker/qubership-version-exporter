@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "qubership-version-exporter.fullname" . }}
+  labels:
+    app: {{ template "qubership-version-exporter.name" . }}
+    app.kubernetes.io/name: {{ template "qubership-version-exporter.name" . }}
+    app.kubernetes.io/component: monitoring
+    {{- if .Values.versionExporter.labels }}
+      {{ toYaml .Values.versionExporter.labels | nindent 4 }}
+    {{- end }}
+  {{- if .Values.versionExporter.annotations }}
+  annotations:
+  {{ toYaml .Values.versionExporter.annotations | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.versionExporter.replicas }}
+  selector:
+    matchLabels:
+      {{- include "qubership-version-exporter.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "qubership-version-exporter.name" . }}
+        {{- include "qubership-version-exporter.selectorLabels" . | nindent 8 }}
+        {{- if .Values.versionExporter.labels }}
+          {{ toYaml .Values.versionExporter.labels | nindent 8 }}
+        {{- end }}
+      {{- if .Values.versionExporter.annotations }}
+      annotations:
+      {{ toYaml .Values.versionExporter.annotations | nindent 8 }}
+      {{- end }}
+    spec:
+      serviceAccountName: {{ template "qubership-version-exporter.name" . }}
+      {{- if .Values.versionExporter.securityContext }}
+      securityContext:
+        runAsUser: {{ default 2000 .Values.versionExporter.securityContext.runAsUser }}
+        runAsGroup: {{ default 2000 .Values.versionExporter.securityContext.runAsGroup }}
+      {{- end }}
+      containers:
+        - name: {{ template "qubership-version-exporter.name" . }}
+          env:
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          {{- if .Values.versionExporter.containerSecurityContext }}
+          securityContext:
+            {{- toYaml .Values.versionExporter.containerSecurityContext | nindent 12 }}
+          {{- end }}
+          image: {{ .Values.versionExporter.image }}
+          args:
+            - "--config.file=/config/exporterConfig.yaml"
+            - "--config.watch=/config"
+          {{- if .Values.versionExporter.extraArgs }}
+            {{ toYaml .Values.versionExporter.extraArgs | nindent 12 }}
+          {{- end }}
+          imagePullPolicy: {{ .Values.versionExporter.imagePullPolicy }}
+          ports:
+            - name: {{ .Values.versionExporter.service.portName }}
+              containerPort: {{ .Values.versionExporter.containerPort }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /-/healthy
+              port: {{ .Values.versionExporter.service.portName }}
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /-/ready
+              port: {{ .Values.versionExporter.service.portName }}
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          resources:
+            {{ toYaml .Values.versionExporter.resources | nindent 12 }}
+          volumeMounts:
+            - name: config
+              mountPath: /config
+      volumes:
+        - name: config
+          projected:
+            sources:
+              {{- if .Values.versionExporter.extraVarsSecret }}
+              - secret:
+                  name: {{ .Values.versionExporter.secretName }}
+              {{- end }}
+              - configMap:
+                  name: {{ template "qubership-version-exporter.fullname" . }}
+      {{- if .Values.versionExporter.nodeSelector }}
+      nodeSelector:
+        {{ toYaml .Values.versionExporter.nodeSelector | nindent 8 }}
+      {{- end }}
+      {{- if .Values.versionExporter.affinity }}
+      affinity:
+        {{ toYaml .Values.versionExporter.affinity | nindent 8 }}
+      {{- end }}
+      {{- if .Values.versionExporter.tolerations }}
+      tolerations:
+        {{ toYaml .Values.versionExporter.tolerations | nindent 8 }}
+      {{- end }}

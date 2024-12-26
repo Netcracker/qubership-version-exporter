@@ -1,0 +1,12 @@
+{{- if and .Values.versionExporter.install .Values.versionExporter.grafanaDashboard }}
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: {{ include "qubership-version-exporter.fullname" . }}
+  labels:
+    app: grafana
+    app.kubernetes.io/component: monitoring
+spec:
+  json: >
+{{ .Files.Get "monitoring/qubership-version-exporter-dashboard-for-grafana.json" | indent 4 }}
+{{- end }}

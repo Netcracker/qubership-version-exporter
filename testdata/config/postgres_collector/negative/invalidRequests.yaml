@@ -1,0 +1,18 @@
+postgres_collector:
+  connections:
+    # Form postgres url, like
+    # postgres://postgres:password@pg-patroni.postgres12.svc:5432/postgres?sslmode=disable
+    - host: pg-patroni.postgres12.svc
+      port: 5432
+      credentials:
+        username:
+          key: pgUsername
+          name: version-exporter-extra-vars-secret
+        password:
+          key: pgPassword
+          name: version-exporter-extra-vars-secret
+      db: postgres
+      # Valid time units are "ns", "us" (or "µs"), "ms", "s", "m", "h".
+      timeout: 10s
+      requests:
+        -

@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "qubership-version-exporter.fullname" . }}
+  labels:
+    app: {{ template "qubership-version-exporter.name" . }}
+    app.kubernetes.io/name: {{ template "qubership-version-exporter.name" . }}
+    {{- if .Values.versionExporter.service.labels }}
+      {{ toYaml .Values.versionExporter.service.labels | indent 4 }}
+    {{- end }}
+  {{- if .Values.versionExporter.service.annotations }}
+  annotations:
+  {{ toYaml .Values.versionExporter.service.annotations | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.versionExporter.service.type }}
+  ports:
+    - port: {{ .Values.versionExporter.service.port }}
+      targetPort:  {{ .Values.versionExporter.containerPort }}
+      protocol: TCP
+      name: {{ .Values.versionExporter.service.portName }}
+  selector:
+    {{- include "qubership-version-exporter.selectorLabels" . | nindent 4 }}

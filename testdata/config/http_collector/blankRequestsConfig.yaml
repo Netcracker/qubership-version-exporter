@@ -1,0 +1,10 @@
+http_collector:
+  connections:
+    - url: ""
+    - url: https://www.example.com
+      requests:
+        - path: "/version"
+          method: "get"
+          metricName: "$newMetric!"
+        - path: "/version"
+          method: "delete"

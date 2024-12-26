@@ -1,0 +1,30 @@
+http_collector:
+  connections:
+    - url: https://www.example.com
+      tlsConfig:
+        tlsSkip: false
+        ca:
+          key: cert-ca.pem
+          name: secret-certificate-authority
+      credentials:
+        username:
+          key: user
+          name: secret-name
+        password:
+          key: password
+          name: secret-name
+      requests:
+        - path: /product_versions
+          method: get
+          metricName: "versions_ci_metric"
+          metrics:
+            - jsonPath: $.go.goVersion
+              labels:
+                - name: goVersion
+        - path: /product_versions
+          method: post
+          metricName: "versions_ci_metric"
+          metrics:
+            - jsonPath: $.buildDate
+              labels:
+                - name: buildDate

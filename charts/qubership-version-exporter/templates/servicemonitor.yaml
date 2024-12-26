@@ -1,0 +1,26 @@
+{{- if and .Values.versionExporter.install .Values.versionExporter.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "qubership-version-exporter.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ template "qubership-version-exporter.name" . }}
+    app.kubernetes.io/component: monitoring
+spec:
+  endpoints:
+    - interval: {{ default "5m" .Values.versionExporter.serviceMonitor.interval }}
+      scrapeTimeout: {{ default "30s" .Values.versionExporter.serviceMonitor.timeout }}
+      port: http
+      path: {{ default "/metrics" .Values.versionExporter.serviceMonitor.telemetryPath }}
+      scheme: http
+  jobLabel: {{ template "qubership-version-exporter.name" . }}
+  namespaceSelector:
+    matchNames:
+      - {{ $.Release.Namespace }}
+  selector:
+    matchExpressions:
+      - key: "app.kubernetes.io/name"
+        operator: In
+        values:
+          - {{ template "qubership-version-exporter.name" . }}
+{{- end }}

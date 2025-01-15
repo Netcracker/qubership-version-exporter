@@ -32,6 +32,7 @@ import (
 	"time"
 
 	collectorModel "qubership-version-exporter/model/http"
+
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 	"github.com/pkg/errors"
@@ -456,9 +457,9 @@ func (httpCollector *HttpCollector) parseTextResponse(responseText string, metri
 				_ = level.Error(httpCollector.logger).Log("msg",
 					"Invalid configuration. Response type is: 'text/plain'. Regexp can't be empty in the configuration")
 				metricLabels[m] = append(metricLabels[m], make([]Labels, 1)...)
-				length += 1
 				metricLabels[m][length].Name = append(metricLabels[m][length].Name, string(*label.name))
 				metricLabels[m][length].Value = append(metricLabels[m][length].Value, "")
+				length++
 			}
 		}
 	}

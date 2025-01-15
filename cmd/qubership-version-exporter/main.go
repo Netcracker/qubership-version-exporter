@@ -25,15 +25,16 @@ import (
 	"time"
 
 	"qubership-version-exporter/collector"
+
 	"github.com/alecthomas/kingpin/v2"
 	"github.com/fsnotify/fsnotify"
 	"github.com/go-kit/log/level"
 	"github.com/prometheus/client_golang/prometheus"
+	versionCollector "github.com/prometheus/client_golang/prometheus/collectors/version"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/prometheus/common/promlog"
 	"github.com/prometheus/common/promlog/flag"
 	"github.com/prometheus/common/version"
-	versionCollector "github.com/prometheus/client_golang/prometheus/collectors/version"
 	"github.com/prometheus/exporter-toolkit/web"
 	webflag "github.com/prometheus/exporter-toolkit/web/kingpinflag"
 	"k8s.io/client-go/kubernetes"
@@ -187,6 +188,7 @@ func main() {
 func healthChecker() http.Handler {
 	return http.HandlerFunc(
 		func(w http.ResponseWriter, req *http.Request) {
+			w.WriteHeader(http.StatusOK)
 			_, _ = w.Write([]byte("OK"))
 		},
 	)
@@ -195,6 +197,7 @@ func healthChecker() http.Handler {
 func readinessChecker() http.Handler {
 	return http.HandlerFunc(
 		func(w http.ResponseWriter, req *http.Request) {
+			w.WriteHeader(http.StatusOK)
 			_, _ = w.Write([]byte("OK"))
 		})
 }

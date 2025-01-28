@@ -37,6 +37,10 @@ spec:
         runAsUser: {{ default 2000 .Values.versionExporter.securityContext.runAsUser }}
         runAsGroup: {{ default 2000 .Values.versionExporter.securityContext.runAsGroup }}
       {{- end }}
+      {{- with .Values.versionExporter.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: {{ template "qubership-version-exporter.name" . }}
           env:

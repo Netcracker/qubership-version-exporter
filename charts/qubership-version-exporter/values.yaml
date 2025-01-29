@@ -24,10 +24,15 @@ versionExporter:
   # Type: string
   # Mandatory: yes
   #
-  image: ghcr.io/netcracker/qubership-version-exporter:main
+  image: ghcr.io/netcracker/version-exporter:main
 
   # Image pull policy to use for qubership-version-exporter deployment
   imagePullPolicy: IfNotPresent
+
+  # Only pods which provide own keys can access the private registry.
+  # Default: []
+  #
+  imagePullSecrets: []
 
   ## Number of created pods.
   # Type: integer
@@ -43,7 +48,7 @@ versionExporter:
     annotations: {}
     # The name of the service account to use.
     # If not set and create is true, a name is generated using the fullname template
-    name: "version-exporter"
+    name: "qubership-version-exporter"
 
   ## The resources describe compute resource requests and limits for single Pod.
   ## Ref: https://kubernetes.io/docs/user-guide/compute-resources/

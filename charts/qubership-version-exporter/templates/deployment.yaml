@@ -52,7 +52,7 @@ spec:
           securityContext:
             {{- toYaml .Values.versionExporter.containerSecurityContext | nindent 12 }}
           {{- end }}
-          image: {{ .Values.versionExporter.image }}
+          image: {{ template "version-exporter.image" . }}
           args:
             - "--config.file=/config/exporterConfig.yaml"
             - "--config.watch=/config"

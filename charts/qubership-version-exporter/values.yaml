@@ -24,7 +24,7 @@ versionExporter:
   # Type: string
   # Mandatory: yes
   #
-  image: ghcr.io/netcracker/version-exporter:main
+  #image: ghcr.io/netcracker/version-exporter:main
 
   # Image pull policy to use for qubership-version-exporter deployment
   imagePullPolicy: IfNotPresent

@@ -60,3 +60,17 @@ Create the name of the service account to use
 {{- default "default" .Values.versionExporter.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Find an image in various places.
+Image can be found from:
+* specified by user from .Values.versionExporter.image
+* default value
+*/}}
+{{- define "version-exporter.image" -}}
+  {{- if .Values.versionExporter.image -}}
+    {{- printf "%s" .Values.versionExporter.image -}}
+  {{- else -}}
+    {{- printf "ghcr.io/netcracker/version-exporter:main" -}}
+  {{- end -}}
+{{- end -}}

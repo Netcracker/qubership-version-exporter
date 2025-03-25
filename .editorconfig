@@ -8,6 +8,7 @@ trim_trailing_whitespace = true
 
 [*.sh]
 end_of_line = lf
+indent_size = 4
 
 [{*.bat,*.cmd}]
 end_of_line = crlf
@@ -30,5 +31,3 @@ indent_size = 4
 [*.py]
 profile = black
 
-[*.sh]
-indent_size = 4

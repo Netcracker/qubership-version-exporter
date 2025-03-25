@@ -1,0 +1,51 @@
+.editorconfig text
+.eslintignore text
+.flake8 text
+.gitattributes text
+.gitignore text
+.gitleaksignore text
+.helmignore text
+.prettierignore text
+.yamlignore text
+
+* text=auto
+*.alpine text
+*.css text
+*.distoless-debug text
+*.distroless text
+*.env text eol=lf
+*.go text
+*.html text
+*.js text
+*.json text
+*.md text
+*.mod text
+*.py text
+*.robot text
+*.sh text eol=lf
+*.sum text
+*.tpl text
+*.txt text
+*.yaml text
+*.yml text
+
+*.eot binary
+*.otf binary
+*.sz binary
+*.ttf binary
+*.woff binary
+*.woff2 binary
+
+known_hosts text
+os_release text
+ssh_config text
+test_private_key text
+test-server.crt text
+
+LICENSE text
+Dockerfile text
+CODEOWNERS text
+
+/CHANGELOG.md merge=union
+/contributors.json merge=union
+

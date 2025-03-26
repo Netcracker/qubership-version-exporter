@@ -1,7 +1,8 @@
+# Installation Notes
 This document provides information about the requirements, configuration, and steps to install Qubership-version-exporter to an
 environment.
 
-# Table of Contents
+## Table of Contents
 
 * [Table of Contents](#table-of-contents)
 * [Inventory](#inventory)
@@ -15,12 +16,12 @@ environment.
   * [Manual deploy using Helm](#manual-deploy-using-helm)
     * [Installing the Chart](#installing-the-chart)
 
-# Inventory
+## Inventory
 
 This section describes how to create an inventory and which parameters are used to deploy Qubership-version-exporter and it`s
 collectors.
 
-## Configuration
+### Configuration
 
 This section provides information about all the parameters of `qubership-version-exporter`. The exporter provides the types of
 collectors:
@@ -29,7 +30,7 @@ collectors:
 * [HTTP requests collector](#http-requests-collector-parameters)
 * [ConfigMap collector](#configmap-collector-parameters)
 
-### General Flags
+#### General Flags
 <!-- markdownlint-disable line-length -->
 | Name               | Description                                           | Default value                    |
 |--------------------|-------------------------------------------------------|----------------------------------|
@@ -41,7 +42,7 @@ collectors:
 
 <!-- markdownlint-enable line-length -->
 
-### Postgres collector parameters
+#### Postgres collector parameters
 
 Postgres collector is able to collect data from pg with sql requests provided in configuration and
 exposes it as prometheus metrics.
@@ -154,7 +155,7 @@ postgres_collector:
           metrics:
 ```
 
-### HTTP requests collector parameters
+#### HTTP requests collector parameters
 
 HTTP requests collector can send `GET` and `POST` requests and parse responses with `Content-Type` of `application/json`
 and `text/plain`.
@@ -274,7 +275,7 @@ Some examples of range-end jsonpath function: ```{range .plugins[*]}{.unique_id}
 Be careful, jsonpath with range function should not have plain text symbols, because qubership-version-exporter can not parse it.
 Example of unsupported case: ```{range .items[*]}[{.metadata.name}, {.status.capacity}] {end}```.
 
-### ConfigMap collector parameters
+#### ConfigMap collector parameters
 
 ConfigMap collector is able to collect data from K8s resources such ConfigMaps and Secrets and
 exposes it as prometheus metrics.
@@ -424,7 +425,7 @@ configmap_collector:
     - name: version-default-configmap
 ```
 
-### SSH collector parameters
+#### SSH collector parameters
 
 SSH collector is able to collect data over ssh by requests provided in configuration and
 exposes it as prometheus metrics.
@@ -522,13 +523,13 @@ ssh_collector:
 
 ```
 
-# Deploy
+## Deploy
 
-## Manual deploy using Helm
+### Manual deploy using Helm
 
 This chart installs deployment of Qubership-version-exporter.
 
-### Installing the Chart
+#### Installing the Chart
 
 To install the chart with the release name `qubership-version-exporter`:
 

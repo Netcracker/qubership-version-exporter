@@ -4,12 +4,10 @@ ENV SOURCES_DIR=./cmd/qubership-version-exporter \
     GOSUMDB=off \
     GO111MODULE=on
 
-
 WORKDIR /workspace
 
 COPY go.mod go.mod
 COPY go.sum go.sum
- 
 
 RUN go mod download
 COPY collector/ collector/
@@ -24,7 +22,7 @@ FROM alpine:3.20.3
 WORKDIR /qubership-version-exporter
 ENV USER_UID=2001 \
     USER_NAME=appuser \
-    GROUP_NAME=appuser 
+    GROUP_NAME=appuser
 
 COPY --from=builder /workspace/qubership-version-exporter /qubership-version-exporter/
 
@@ -35,3 +33,4 @@ RUN chmod +x  /qubership-version-exporter/qubership-version-exporter \
 USER ${USER_UID}
 
 ENTRYPOINT [ "/qubership-version-exporter/qubership-version-exporter" ]
+

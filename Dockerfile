@@ -21,7 +21,7 @@ FROM alpine:3.21.3
 WORKDIR /qubership-version-exporter
 ENV USER_UID=2001 \
     USER_NAME=appuser \
-    GROUP_NAME=appuser 
+    GROUP_NAME=appuser
 
 COPY --from=builder /workspace/qubership-version-exporter /qubership-version-exporter/
 
@@ -32,3 +32,4 @@ RUN chmod +x  /qubership-version-exporter/qubership-version-exporter \
 USER ${USER_UID}
 
 ENTRYPOINT [ "/qubership-version-exporter/qubership-version-exporter" ]
+

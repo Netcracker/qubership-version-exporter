@@ -1,39 +1,39 @@
 http_collector:
   connections:
-    - url: https://www.example.com
-      tlsConfig:
-        tlsSkip: false
-        ca:
-          key: cert-ca.pem
-          name: secret-certificate-authority
-      credentials:
-        username:
-          key: user
-          name: secret-name
-        password:
-          key: password
-          name: secret-name
-      requests:
-        - path: /product_versions
-          method: get
-          metricName: "versions_ci_metric"
-          metrics:
-            - jsonPath: $.go.goVersion
-              labels:
-                - name: goVersion
-    - url: https://www.example.com
-      tlsConfig:
-        tlsSkip: true
-      credentials:
-        token:
-          key: token
-          name: secret-name
-      requests:
-        - path: /version
-          method: get
-          metricName: "versions_ci_metric"
-          metrics:
-            - jsonPath: $.platform
-              labels:
-                - name: platform
-                  valueRegexp: "[a-z0-9.]*"
+  - url: https://www.example.com
+    tlsConfig:
+      tlsSkip: false
+      ca:
+        key: cert-ca.pem
+        name: secret-certificate-authority
+    credentials:
+      username:
+        key: user
+        name: secret-name
+      password:
+        key: password
+        name: secret-name
+    requests:
+    - path: /product_versions
+      method: get
+      metricName: "versions_ci_metric"
+      metrics:
+      - jsonPath: $.go.goVersion
+        labels:
+        - name: goVersion
+  - url: https://www.example.com
+    tlsConfig:
+      tlsSkip: true
+    credentials:
+      token:
+        key: token
+        name: secret-name
+    requests:
+    - path: /version
+      method: get
+      metricName: "versions_ci_metric"
+      metrics:
+      - jsonPath: $.platform
+        labels:
+        - name: platform
+          valueRegexp: "[a-z0-9.]*"

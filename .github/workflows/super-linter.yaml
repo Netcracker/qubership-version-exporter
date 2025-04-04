@@ -4,20 +4,13 @@
 #
 # You can adjust the behavior by modifying this file.
 # For more information, see:
-# https://github.com/super-linter/super-linter
-# Configuration file for super-linter example:
-# .github/super-linter.env
-# Configuration files for individual linters should be placed in .github/linters
-
+# https://github.com/github/super-linter
 name: Lint Code Base
 
 on:
-  push:
-    branches:
-    - '**'
-  pull_request:
-    branches:
-    - '**'
+  push: null
+  pull_request: null
+  merge_group: null
   workflow_dispatch:
     inputs:
       full_scan:
@@ -26,12 +19,17 @@ on:
         required: false
         description: "Lint all codebase"
 
-permissions:
-  contents: read
+# Don't grant any access by default
+permissions: {}
 
 jobs:
   run-lint:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+      # To report GitHub Actions status checks
+      statuses: write
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -48,7 +46,9 @@ jobs:
         fi
 
     - name: Lint Code Base
-      uses: super-linter/super-linter@v7
+      uses: super-linter/super-linter/slim@v7.3.0
       env:
         VALIDATE_ALL_CODEBASE: ${{ inputs.full_scan || false }}
+        DEFAULT_BRANCH: "main"
+        # To report GitHub Actions status checks
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

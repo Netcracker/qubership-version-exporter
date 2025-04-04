@@ -8,13 +8,10 @@ trim_trailing_whitespace = true
 
 [*.sh]
 end_of_line = lf
+indent_size = 4
 
 [{*.bat,*.cmd}]
 end_of_line = crlf
-
-[*.go]
-# gofmt defaults to LF for all the platforms: https://github.com/golang/go/issues/16355
-end_of_line = lf
 
 [*.md]
 # Trailing whitespace is important in Markdown (they distinguish a new line from a new paragraph)
@@ -33,6 +30,3 @@ indent_size = 4
 
 [*.py]
 profile = black
-
-[*.sh]
-indent_size = 4

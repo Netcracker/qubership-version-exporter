@@ -21,4 +21,3 @@ conventional-commits:
 - type: "config"
   nouns: ["config", "conf", "configuration", "configure"]
   labels: ["config"]
-

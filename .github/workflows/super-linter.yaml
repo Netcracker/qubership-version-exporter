@@ -1,3 +1,4 @@
+---
 # This workflow executes several linters on changed files based on languages used in your code base whenever
 # you push a code or open a pull request.
 #
@@ -51,4 +52,3 @@ jobs:
         DEFAULT_BRANCH: "main"
         # To report GitHub Actions status checks
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-

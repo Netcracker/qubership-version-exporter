@@ -18,22 +18,19 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"log"
 	"net"
 	"net/http"
 	"os"
 	"time"
 
-	"qubership-version-exporter/collector"
+	"github.com/Netcracker/qubership-version-exporter/pkg/collector"
+	"github.com/Netcracker/qubership-version-exporter/pkg/logger"
 
 	"github.com/alecthomas/kingpin/v2"
 	"github.com/fsnotify/fsnotify"
-	"github.com/go-kit/log/level"
 	"github.com/prometheus/client_golang/prometheus"
 	versionCollector "github.com/prometheus/client_golang/prometheus/collectors/version"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"github.com/prometheus/common/promlog"
-	"github.com/prometheus/common/promlog/flag"
 	"github.com/prometheus/common/version"
 	"github.com/prometheus/exporter-toolkit/web"
 	webflag "github.com/prometheus/exporter-toolkit/web/kingpinflag"
@@ -41,43 +38,44 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 )
 
+var (
+	webConfig  = webflag.AddFlags(kingpin.CommandLine, ":9100")
+	metricPath = kingpin.Flag(
+		"web.telemetry-path",
+		"Path under which to expose metrics.",
+	).Default("/metrics").String()
+	maxRequests = kingpin.Flag(
+		"web.max-requests",
+		"Maximum number of parallel scrape requests. Use 0 to disable.",
+	).Default("40").Int()
+	configPath = kingpin.Flag(
+		"config.file",
+		"Version exporter configuration file.",
+	).Default("/config/exporterConfig.yaml").String()
+	watchPath = kingpin.Flag(
+		"config.watch",
+		"Directory for watching change config map events.",
+	).Default("").String()
+)
+
 func init() {
-	prometheus.MustRegister(versionCollector.NewCollector("version_exporter"))
+	prometheus.MustRegister(versionCollector.NewCollector("qubership_version_exporter"))
 }
 
 func main() {
-	var (
-		webConfig  = webflag.AddFlags(kingpin.CommandLine, ":9100")
-		metricPath = kingpin.Flag(
-			"web.telemetry-path",
-			"Path under which to expose metrics.",
-		).Default("/metrics").String()
-		maxRequests = kingpin.Flag(
-			"web.max-requests",
-			"Maximum number of parallel scrape requests. Use 0 to disable.",
-		).Default("40").Int()
-		configPath = kingpin.Flag(
-			"config.file",
-			"Version exporter configuration file.",
-		).Default("/config/exporterConfig.yaml").String()
-		watchPath = kingpin.Flag(
-			"config.watch",
-			"Directory for watching change config map events.",
-		).Default("").String()
-	)
+	// Initialize logger
+	logLevel := os.Getenv("LOG_LEVEL")
+	if logLevel == "" {
+		logLevel = "info"
+	}
 
-	promLogConfig := &promlog.Config{}
-	flag.AddFlags(kingpin.CommandLine, promLogConfig)
-	kingpin.Version(version.Print("version_exporter"))
-	kingpin.CommandLine.UsageWriter(os.Stdout)
-	kingpin.HelpFlag.Short('h')
-	kingpin.Parse()
-	logger := promlog.New(promLogConfig)
+	loggerConfig := &logger.Config{}
+	logger := logger.New(loggerConfig)
 
-	_ = os.Setenv("LOG_LEVEL", promLogConfig.Level.String())
+	loggerConfig.Level.Set(logLevel)
 
-	_ = level.Info(logger).Log("msg", fmt.Sprintf("Starting version_exporter: %s", version.Info()))
-	_ = level.Info(logger).Log("msg", fmt.Sprintf("Build context: %s", version.BuildContext()))
+	logger.Info("Starting qubership_version_exporter", "version", version.Info())
+	logger.Info("Build context", "context", version.BuildContext())
 
 	baseCtx, cancel := context.WithCancel(context.Background())
 	ctx := context.WithValue(baseCtx, collector.ContextKey, "main")
@@ -93,20 +91,20 @@ func main() {
 		clientSet = kubernetes.NewForConfigOrDie(rCfg)
 	}
 
-	cfgCont := collector.NewConfigContainer(*configPath, namespace, clientSet, logger)
+	cfgCont := collector.NewConfigContainer(*configPath, namespace, clientSet, *logger)
 
 	if err := cfgCont.Initialize(ctx); err != nil {
-		_ = level.Error(logger).Log("msg", "initialization failed", "err", err)
+		logger.Error("Initialization failed", "error", err)
 		os.Exit(1)
 	}
 
 	var enabledCollectors []collector.Collector
 	for collectorName, enabled := range collector.GetCollectorStates() {
 		if _, found = cfgCont.CollectorConfigs[collector.AsType(collectorName)]; found && enabled {
-			_ = level.Info(logger).Log("msg", fmt.Sprintf("Collector enabled: %s", collectorName))
-			c, err := collector.GetCollector(collectorName, logger)
+			logger.Info("Collector enabled", "collector", collectorName)
+			c, err := collector.GetCollector(collectorName, *logger)
 			if err != nil {
-				_ = level.Error(logger).Log("msg", fmt.Sprintf("couldn't get collector: %s", collectorName), "err", err)
+				logger.Error("Couldn't get collector", "collector", collectorName, "error", err)
 				continue
 			}
 			enabledCollectors = append(enabledCollectors, c)
@@ -117,41 +115,41 @@ func main() {
 		if cfg := cfgCont.GetConfig(ctx, coll.Type()); cfg != nil {
 			err := coll.Initialize(ctx, cfg)
 			if err != nil {
-				_ = level.Error(logger).Log("msg", fmt.Sprintf("can't initialize collector: %s", coll.Name()), "err", err)
+				logger.Error("Can't initialize collector", "collector", coll.Name(), "error", err)
 			}
 		}
 	}
 
-	exporter := collector.New(ctx, collector.NewMetrics(), enabledCollectors, logger)
+	exporter := collector.New(ctx, collector.NewMetrics(), enabledCollectors, *logger)
 	cfgCont.Exporter = exporter
 
 	if *watchPath != "" {
 		watcher, err := fsnotify.NewWatcher()
 		if err != nil {
-			log.Fatal(err)
+			logger.Error("Couldn't create a new file system watcher", "error", err)
 		}
 		defer func(watcher *fsnotify.Watcher) {
 			err = watcher.Close()
 			if err != nil {
-				log.Fatal(err)
+				logger.Error("Unexpected error", "error", err)
 			}
 		}(watcher)
 
 		err = watcher.Add(*watchPath)
 		if err != nil {
-			log.Fatal(err)
+			logger.Error("Unexpected error", "error", err)
 		}
-		_ = level.Debug(logger).Log("msg", fmt.Sprintf("Watching directory: %s", *watchPath))
+		logger.Debug("Watching directory", "directory", *watchPath)
 
 		fw := &fsWatcher{
 			ctx:    ctx,
-			logger: logger,
+			logger: *logger,
 		}
 
 		go fw.watch(watcher, cfgCont)
 	}
 
-	metricHandlerFunc := collector.MetricHandler(exporter, *maxRequests, logger)
+	metricHandlerFunc := collector.MetricHandler(exporter, *maxRequests, *logger)
 	http.Handle(*metricPath, promhttp.InstrumentMetricHandler(prometheus.DefaultRegisterer, metricHandlerFunc))
 	http.Handle("/-/ready", readinessChecker())
 	http.Handle("/-/healthy", healthChecker())
@@ -165,24 +163,24 @@ func main() {
 
 	sd := &shutdown{
 		srv:     srv,
-		logger:  logger,
+		logger:  *logger,
 		ctx:     context.WithValue(context.Background(), collector.ContextKey, "shutdown"),
 		timeout: 30 * time.Second,
 	}
 	go sd.listen()
-	_ = level.Info(logger).Log("msg", fmt.Sprintf("starting server on address %s", srv.Addr))
+	logger.Info(fmt.Sprintf("Starting server on address %s", srv.Addr))
 	exit := web.ListenAndServe(srv, webConfig, logger)
 
 	cancel()
 	for _, coll := range enabledCollectors {
 		coll.Close()
 	}
-	_ = level.Info(logger).Log("msg", "All collectors are closed")
+	logger.Info("All collectors are closed")
 
 	if !errors.Is(exit, http.ErrServerClosed) {
-		_ = level.Error(logger).Log("msg", "failed to start application", "err", exit)
+		logger.Error("Failed to start application", "error", exit)
 	}
-	_ = level.Info(logger).Log("msg", "server is shut down")
+	logger.Info("Server is shut down")
 }
 
 func healthChecker() http.Handler {

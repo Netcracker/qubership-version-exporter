@@ -10,6 +10,7 @@ on:
 
 permissions:
   pull-requests: read
+
 jobs:
   build:
     name: Conventional Commits

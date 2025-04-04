@@ -1,13 +1,13 @@
-module qubership-version-exporter
+module github.com/Netcracker/qubership-version-exporter
 
-go 1.23
+go 1.23.0
+
 toolchain go1.24.1
 
 require (
 	github.com/alecthomas/kingpin/v2 v2.4.0
 	github.com/driftprogramming/pgxpoolmock v1.1.0
 	github.com/fsnotify/fsnotify v1.7.0
-	github.com/go-kit/log v0.2.1
 	github.com/go-playground/locales v0.14.1
 	github.com/go-playground/universal-translator v0.18.1
 	github.com/go-playground/validator/v10 v10.22.0
@@ -38,7 +38,6 @@ require (
 	github.com/evanphx/json-patch v5.6.0+incompatible // indirect
 	github.com/evanphx/json-patch/v5 v5.6.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
-	github.com/go-logfmt/logfmt v0.5.1 // indirect
 	github.com/go-logr/logr v1.2.4 // indirect
 	github.com/go-openapi/jsonpointer v0.19.6 // indirect
 	github.com/go-openapi/jsonreference v0.20.2 // indirect
@@ -96,5 +95,3 @@ require (
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.3 // indirect
 	sigs.k8s.io/yaml v1.3.0 // indirect
 )
-
-//replace github.com/go-playground/validator/v10 => github.com/go-playground/validator/v10 v10.19.0

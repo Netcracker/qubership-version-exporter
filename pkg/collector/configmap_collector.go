@@ -182,7 +182,7 @@ func (cmCollector *CmCollector) Scrape(ctx context.Context, metrics *Metrics, ch
 
 	for _, r := range cmCollector.Resources {
 		var checkAllNamespaces bool
-		if r.Namespaces == nil || len(r.Namespaces) == 0 {
+		if len(r.Namespaces) == 0 {
 			checkAllNamespaces = true
 		} else {
 			checkAllNamespaces = false

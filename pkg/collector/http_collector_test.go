@@ -138,6 +138,7 @@ var httpColConfig = &collectorModel.Collectors{
 	},
 }
 
+// editorconfig-checker-disable
 var testResponseJson = []byte(`
 {
   "plugins": [
@@ -500,6 +501,7 @@ var pluginId = map[string]struct{}{
 	"vertamedia-clickhouse-datasource":   {},
 	"vonage-status-panel":                {},
 }
+// editorconfig-checker-enable
 
 // SecretDataReactor sets the secret.Data field based on the values from secret.StringData
 func SecretDataReactor(action ktesting.Action) (bool, runtime.Object, error) {

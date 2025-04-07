@@ -1,4 +1,5 @@
 # Installation Notes
+
 This document provides information about the requirements, configuration, and steps to install Qubership-version-exporter to an
 environment.
 
@@ -18,22 +19,22 @@ environment.
 
 ## Inventory
 
-This section describes how to create an inventory and which parameters are used to deploy Qubership-version-exporter and it`s
-collectors.
+This section describes how to create an inventory and which parameters are used to deploy Qubership-version-exporter
+and it`s collectors.
 
 ### Configuration
 
-This section provides information about all the parameters of `qubership-version-exporter`. The exporter provides the types of
-collectors:
+This section provides information about all the parameters of `qubership-version-exporter`.
+The exporter provides the types of collectors:
 
-* [Postgres collector](#Postgres-collector-parameters)
+* [Postgres collector parameters](#postgres-collector-parameters)
 * [HTTP requests collector](#http-requests-collector-parameters)
 * [ConfigMap collector](#configmap-collector-parameters)
 
 #### General Flags
 <!-- markdownlint-disable line-length -->
 | Name               | Description                                           | Default value                    |
-|--------------------|-------------------------------------------------------|----------------------------------|
+| ------------------ | ----------------------------------------------------- | -------------------------------- |
 | log.level          | Logging verbosity                                     | info                             |
 | web.listen-address | Address on which to expose metrics and web interface. | :9100                            |
 | web.telemetry-path | Path under which to expose metrics.                   | /metrics                         |
@@ -61,8 +62,8 @@ version_exporter:
 
 <!-- markdownlint-disable line-length -->
 | Field                        | Description                                                                                                                                                | Scheme | Required |
-|------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|--------|----------|
-| host                         | Postgres host name or ip to connect to. A part of postgres url. Must be unique.                                                                            | string | true     |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | -------- |
+| host                         | Postgres hostname or ip to connect to. A part of postgres URL. Must be unique.                                                                             | string | true     |
 | port                         | Postgres port number to connect to at the server host.                                                                                                     | string | true     |
 | credentials.username.key     | Credentials for basic authentication. Secret key                                                                                                           | string | true     |
 | credentials.username.name    | Credentials for basic authentication. Secret name                                                                                                          | string | true     |
@@ -80,7 +81,7 @@ version_exporter:
 
 If requests.metrics.label is not defined, use as labels:
 
-1. Named group of regexp
+1. Named group of regular expression
 2. Column name of sql request results
 
 Example of configuration:
@@ -182,23 +183,23 @@ version_exporter:
 
 <!-- markdownlint-disable line-length -->
 
-| Field                       | Description                                                                                                          | Scheme | Required |
-|-----------------------------|----------------------------------------------------------------------------------------------------------------------|--------|----------|
-| url                         | A part of REST request (protocol, domain ant port). Must be unique.                                                  | string | true     |
-| tlsConfig.tlsSkip           | Allow to disable certificates verification. Default: `false`.                                                        | bool   | false    |
-| tlsConfig.ca                | Secret name and key where Certificate Authority is stored. Ignored if `tlsConfig.tlsSkip=true`.                      | object | true     |
-| tlsConfig.cert              | Secret name and key where Certificate signing request is stored. Ignored if `tlsConfig.tlsSkip=true`.                | object | false    |
-| tlsConfig.pkey              | Secret name and key where private key is stored. Ignored if `tlsConfig.tlsSkip=true`.                                | object | false    |
-| credentials.username        | Credentials for basic authentication. Basic auth or token data should be provided if necessary.                      | object | false    |
-| credentials.password        | Credentials for basic authentication.                                                                                | object | false    |
-| credentials.token           | Credentials for token-based authentication.                                                                          | object | false    |
-| requests.path               | Path and parameters of REST request (without protocol, domain ant port). Must be unique.                             | string | true     |
-| requests.method             | Method of REST request. Possible values: `get/post`                                                                  | string | true     |
-| requests.metricName         | Name of new Prometheus metric.                                                                                       | string | true     |
-| requests.description        | Description of new Prometheus metric. Limit 100 symbols.                                                             | string | false    |
-| requests.metrics.jsonPath   | JsonPath expressions applied to response of Content-Type "application/json". Must be unique.                         | string | false    |
-| requests.labels.name        | Name of label of new Prometheus metric. Must be unique.                                                              | string | true     |
-| requests.labels.valueRegexp | Regular expression applied to results of JsonPath search or to response of Content-Type "text/plain". Default: `.*`. | string | false    |
+| Field                         | Description                                                                                                          | Scheme | Required |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------- | ------ | -------- |
+| `url`                         | A part of REST request (protocol, domain ant port). Must be unique.                                                  | string | true     |
+| `tlsConfig.tlsSkip`           | Allow to disable certificates verification. Default: `false`.                                                        | bool   | false    |
+| `tlsConfig.ca`                | Secret name and key where Certificate Authority is stored. Ignored if `tlsConfig.tlsSkip=true`.                      | object | true     |
+| `tlsConfig.cert`              | Secret name and key where Certificate signing request is stored. Ignored if `tlsConfig.tlsSkip=true`.                | object | false    |
+| `tlsConfig.pkey`              | Secret name and key where private key is stored. Ignored if `tlsConfig.tlsSkip=true`.                                | object | false    |
+| `credentials.username`        | Credentials for basic authentication. Basic auth or token data should be provided if necessary.                      | object | false    |
+| `credentials.password`        | Credentials for basic authentication.                                                                                | object | false    |
+| `credentials.token`           | Credentials for token-based authentication.                                                                          | object | false    |
+| `requests.path`               | Path and parameters of REST request (without protocol, domain ant port). Must be unique.                             | string | true     |
+| `requests.method`             | Method of REST request. Possible values: `get/post`                                                                  | string | true     |
+| `requests.metricName`         | Name of new Prometheus metric.                                                                                       | string | true     |
+| `requests.description`        | Description of new Prometheus metric. Limit 100 symbols.                                                             | string | false    |
+| `requests.metrics.jsonPath`   | JsonPath expressions applied to response of Content-Type "application/json". Must be unique.                         | string | false    |
+| `requests.labels.name`        | Name of label of new Prometheus metric. Must be unique.                                                              | string | true     |
+| `requests.labels.valueRegexp` | Regular expression applied to results of JsonPath search or to response of Content-Type "text/plain". Default: `.*`. | string | false    |
 
 <!-- markdownlint-enable line-length -->
 
@@ -298,7 +299,7 @@ version_exporter:
 
 <!-- markdownlint-disable line-length -->
 | Field                              | Description                                                                                                                                                                                                                                   | Scheme            | Required |
-|------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------|----------|
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- | -------- |
 | defaults                           | Default values for configuration. Can be overrided in the resources section for each resource. Most of fields in this section are mandatory.                                                                                                  | object            | true     |
 | defaults.type                      | Type of k8s resource. Allowed values: configmap, secret.                                                                                                                                                                                      | string            | true     |
 | defaults.namespaces                | Namespaces in which to search for resources. Use empty list to search in all namespaces.                                                                                                                                                      | list[string]      | true     |
@@ -343,7 +344,8 @@ used as label name for Prometheus metrics, and must contain either `keyRegexp` o
 
 The data in ConfigMaps and Secrets is a `map[string]string` where each field has a key and a value.
 When you specify parameter `keyRegexp` for label item, it means that collector will parse *keys* from the data with
-regexp from the parameter. If you specify `valueRegexp`, collector will parse *values* with this regexp.
+regular expression from the parameter.
+If you specify `valueRegexp`, collector will parse *values* with this regular expression.
 
 Version exporter expects the ConfigMap data to be in the following format:
 
@@ -427,7 +429,7 @@ configmap_collector:
 
 #### SSH collector parameters
 
-SSH collector is able to collect data over ssh by requests provided in configuration and
+SSH collector is able to collect data over SSH by requests provided in configuration and
 exposes it as prometheus metrics.
 
 The parameters of `SSH collector` should be provided under the section:
@@ -444,8 +446,8 @@ version_exporter:
 
 <!-- markdownlint-disable line-length -->
 | Field                       | Description                                                                                                    | Scheme | Required |
-|-----------------------------|----------------------------------------------------------------------------------------------------------------|--------|----------|
-| host                        | SSH server host name or ip to connect to. Must be unique.                                                      | string | true     |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------- | ------ | -------- |
+| host                        | SSH server hostname or ip to connect to. Must be unique.                                                      | string | true     |
 | port                        | Port number to connect to the server host.                                                                     | string | true     |
 | network                     | Network type to connect to the server host. ("tcp" is only supported)                                          | string | true     |
 | k8sCredentials.login.key    | Credentials for basic authentication. Secret key                                                               | string | true     |

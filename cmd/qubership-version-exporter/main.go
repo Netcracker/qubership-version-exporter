@@ -72,7 +72,10 @@ func main() {
 	loggerConfig := &logger.Config{}
 	logger := logger.New(loggerConfig)
 
-	loggerConfig.Level.Set(logLevel)
+	err := loggerConfig.Level.Set(logLevel)
+	if err != nil {
+		logger.Error("Failed to set log level", "error", err)
+	}
 
 	logger.Info("Starting qubership_version_exporter", "version", version.Info())
 	logger.Info("Build context", "context", version.BuildContext())

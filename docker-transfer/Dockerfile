@@ -2,4 +2,4 @@ FROM scratch
 
 # Collect helm charts and documentation
 COPY charts/ /charts
-COPY documents/ /documents
+COPY docs/ /docs

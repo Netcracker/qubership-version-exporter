@@ -48,7 +48,7 @@ postgres_collector:
     db: postgres
     # Valid time units are "ns", "us" (or "µs"), "ms", "s", "m", "h".
     timeout: 10s
-  requests:
+    requests:
     - sql: select version()
       metricName: postgres_build_info
       metrics:

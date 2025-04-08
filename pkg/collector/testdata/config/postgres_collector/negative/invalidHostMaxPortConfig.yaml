@@ -1,6 +1,6 @@
 postgres_collector:
   connections:
-    - host: x.x.x.x
+    - host: 1.2.3.4
       port: 75535
       credentials:
         username:

@@ -1,6 +1,6 @@
 ssh_collector:
   connections:
-    - host: 310.x.x.x
+    - host: 310.2.3.4
       port: 22
       network: tcp
       # Valid time units are "ns", "us" (or "µs"), "ms", "s", "m", "h".
@@ -29,7 +29,7 @@ ssh_collector:
           labels:
             - name: version
               valueRegexp: "[^a-zA-Z0-9]"
-    - host: x.x.x.x
+    - host: 2.3.4.5
       port: 22
       network: tcp
       # Valid time units are "ns", "us" (or "µs"), "ms", "s", "m", "h".

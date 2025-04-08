@@ -1,14 +1,14 @@
 ssh_collector:
   connections:
-    - host: x.x.x.x
+    - host: 1.2.3.4
       port: 75222
       network: tcp
       # Valid time units are "ns", "us" (or "µs"), "ms", "s", "m", "h".
       timeout: 5s
       credentials:
         login: centos
-        identityFile: "testdata/configh_collector/keys/test_private_key"
-        knownHostsPath: "testdata/configh_collector/keys/known_hosts"
+        identityFile: "testdata/config/ssh_collector/keys/test_private_key"
+        knownHostsPath: "testdata/config/ssh_collector/keys/known_hosts"
       requests:
         - cmd: "head /etc/os-release"
           metricName: "os_versions_metric"
@@ -29,15 +29,15 @@ ssh_collector:
           labels:
             - name: version
               valueRegexp: "[^a-zA-Z0-9]"
-    - host: x.x.x.x
+    - host: 2.3.4.5
       port: 22
       network: tcp
       # Valid time units are "ns", "us" (or "µs"), "ms", "s", "m", "h".
       timeout: 5s
       credentials:
         login: centos
-        identityFile: "testdata/configh_collector/keys/test_private_key"
-        knownHostsPath: "testdata/configh_collector/keys/known_hosts"
+        identityFile: "testdata/config/ssh_collector/keys/test_private_key"
+        knownHostsPath: "testdata/config/ssh_collector/keys/known_hosts"
       requests:
         - cmd: 'printenv'
           metricName: "os_versions_metric"

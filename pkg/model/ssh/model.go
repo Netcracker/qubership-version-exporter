@@ -64,7 +64,7 @@ type (
 	}
 
 	Request struct {
-		Cmd         string  `yaml:"cmd" validate:"required,startswith=cat|startswith=nl|startswith=head|startswith=tail|startswith=echo|startswith=hostname|startswith=uname"`
+		Cmd         string  `yaml:"cmd" validate:"required,startswith=cat|startswith=nl|startswith=head|startswith=tail|startswith=echo|startswith=hostname|startswith=uname|startswith=printenv"`
 		MetricName  string  `yaml:"metricName" validate:"required,prometheus_metric_name"`
 		Description string  `yaml:"description,omitempty" validate:"omitempty,lte=100"`
 		Labels      []Label `yaml:"labels" validate:"required,unique=Name,min=1,dive"`

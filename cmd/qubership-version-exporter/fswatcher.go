@@ -16,19 +16,18 @@ package main
 
 import (
 	"context"
-	"fmt"
+	"log/slog"
 	"os"
 	"path/filepath"
 
-	"qubership-version-exporter/collector"
+	"github.com/Netcracker/qubership-version-exporter/pkg/collector"
+
 	"github.com/fsnotify/fsnotify"
-	"github.com/go-kit/log"
-	"github.com/go-kit/log/level"
 )
 
 type fsWatcher struct {
 	ctx    context.Context
-	logger log.Logger
+	logger slog.Logger
 }
 
 func (fw *fsWatcher) watch(watcher *fsnotify.Watcher, container *collector.Container) {
@@ -38,10 +37,10 @@ func (fw *fsWatcher) watch(watcher *fsnotify.Watcher, container *collector.Conta
 			if !fw.isValidEvent(event) {
 				continue
 			}
-			_ = level.Info(fw.logger).Log("msg", "config map updated")
+			fw.logger.Info("config map updated")
 
 			if err := container.ReadConfig(fw.ctx); err != nil {
-				_ = level.Error(fw.logger).Log("msg", "initialization failed", "err", err)
+				fw.logger.Error("initialization failed", "error", err)
 				os.Exit(1)
 			}
 
@@ -49,10 +48,10 @@ func (fw *fsWatcher) watch(watcher *fsnotify.Watcher, container *collector.Conta
 			var enabledCollectors []collector.Collector
 			for collectorName, enabled := range collector.GetCollectorStates() {
 				if _, found := container.CollectorConfigs[collector.AsType(collectorName)]; found && enabled {
-					_ = level.Info(fw.logger).Log("msg", fmt.Sprintf("Collector enabled: %s", collectorName))
+					fw.logger.Info("Collector enabled", "collector", collectorName)
 					c, err := collector.GetCollector(collectorName, fw.logger)
 					if err != nil {
-						_ = level.Error(fw.logger).Log("msg", fmt.Sprintf("couldn't get collector: %s", collectorName), "err", err)
+						fw.logger.Error("couldn't get collector", "collector", collectorName, "error", err)
 						continue
 					}
 					enabledCollectors = append(enabledCollectors, c)
@@ -64,7 +63,7 @@ func (fw *fsWatcher) watch(watcher *fsnotify.Watcher, container *collector.Conta
 				if cfg := container.GetConfig(fw.ctx, coll.Type()); cfg != nil {
 					err := coll.Initialize(fw.ctx, cfg)
 					if err != nil {
-						_ = level.Error(fw.logger).Log("msg", fmt.Sprintf("can't initialize collector: %s", coll.Name()), "err", err)
+						fw.logger.Error("can't initialize collector", "collector", coll.Name(), "error", err)
 					}
 				}
 			}
@@ -72,13 +71,13 @@ func (fw *fsWatcher) watch(watcher *fsnotify.Watcher, container *collector.Conta
 			container.Exporter.Mutex.RUnlock()
 
 		case err := <-watcher.Errors:
-			_ = level.Error(fw.logger).Log("msg", "initialization failed", "err", err)
+			fw.logger.Error("initialization failed", "error", err)
 		}
 	}
 }
 
 func (fw *fsWatcher) isValidEvent(event fsnotify.Event) bool {
-	_ = level.Debug(fw.logger).Log("msg", event.String())
+	fw.logger.Debug(event.String())
 	if event.Op&fsnotify.Create != fsnotify.Create {
 		return false
 	}

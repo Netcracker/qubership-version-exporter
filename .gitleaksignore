@@ -1,3 +1,2 @@
-/tmp/lint/testdata/config/ssh_collector/keys/test_private_key:private-key:1
-/github/workspace/testdata/config/ssh_collector/keys/test_private_key:private-key:1
-
+/tmp/lint/pkg/collector/testdata/config/ssh_collector/keys/test_private_key:private-key:1
+/github/workspace/pkg/collector/testdata/config/ssh_collector/keys/test_private_key:private-key:1

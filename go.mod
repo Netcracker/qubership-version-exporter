@@ -14,7 +14,7 @@ require (
 	github.com/golang/mock v1.6.0
 	github.com/jackc/pgx/v4 v4.18.3
 	github.com/pkg/errors v0.9.1
-	github.com/prometheus/client_golang v1.20.4
+	github.com/prometheus/client_golang v1.22.0
 	github.com/prometheus/client_model v0.6.1
 	github.com/prometheus/common v0.63.0
 	github.com/prometheus/exporter-toolkit v0.14.0
@@ -61,7 +61,6 @@ require (
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/jpillora/backoff v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/klauspost/compress v1.17.9 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mdlayher/socket v0.4.1 // indirect

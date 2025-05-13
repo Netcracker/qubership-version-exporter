@@ -19,7 +19,7 @@ COPY pkg/ pkg/
 RUN go mod download
 
 # Run build
-RUN CGO_ENABLED=0 GOOS={TARGETOS} GOARCH={TARGETARCH} go build -o version_exporter ${SOURCES_DIR}/
+RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o version_exporter ${SOURCES_DIR}/
 
 # Use alpine tiny images as a base
 FROM alpine:3.21.3

@@ -63,6 +63,11 @@ func init() {
 }
 
 func main() {
+	// Read CLI flags
+	kingpin.Version(version.Print("version_exporter"))
+	kingpin.CommandLine.UsageWriter(os.Stdout)
+	kingpin.Parse()
+
 	// Initialize logger
 	logLevel := os.Getenv("LOG_LEVEL")
 	if logLevel == "" {

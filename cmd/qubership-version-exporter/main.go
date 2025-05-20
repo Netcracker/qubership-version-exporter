@@ -63,6 +63,11 @@ func init() {
 }
 
 func main() {
+	// Read CLI flags
+	kingpin.Version(version.Print("version_exporter"))
+	kingpin.CommandLine.UsageWriter(os.Stdout)
+	kingpin.Parse()
+
 	// Initialize logger
 	logLevel := os.Getenv("LOG_LEVEL")
 	if logLevel == "" {
@@ -183,7 +188,7 @@ func main() {
 	if !errors.Is(exit, http.ErrServerClosed) {
 		logger.Error("Failed to start application", "error", exit)
 	}
-	logger.Info("Server is shut down")
+	logger.Info("Server is shutdown")
 }
 
 func healthChecker() http.Handler {

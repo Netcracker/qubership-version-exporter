@@ -1,22 +1,21 @@
 ---
+
 name: Conventional Commits PR Check
 
 on:
   pull_request:
     types:
-    - opened
-    - edited
-    - synchronize
+      - opened
+      - edited
+      - synchronize
 
 permissions:
   pull-requests: read
-
 jobs:
   build:
     name: Conventional Commits
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: webiny/action-conventional-commits@v1.3.0
-      with:
-        allowed-commit-types: feat,feature,fix,docs,style,refactor,test,build,perf,ci,chore,revert,merge,wip
+      - uses: actions/checkout@v4
+
+      - uses: webiny/action-conventional-commits@v1.3.0

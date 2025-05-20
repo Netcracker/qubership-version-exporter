@@ -23,6 +23,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"testing"
+	"runtime"
 
 	"github.com/Netcracker/qubership-version-exporter/pkg/logger"
 	collectorModel "github.com/Netcracker/qubership-version-exporter/pkg/model/http"
@@ -33,7 +34,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime"
+	k8sruntime "k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/kubernetes/fake"
 	ktesting "k8s.io/client-go/testing"
 )
@@ -504,7 +505,7 @@ var pluginId = map[string]struct{}{
 // editorconfig-checker-enable
 
 // SecretDataReactor sets the secret.Data field based on the values from secret.StringData
-func SecretDataReactor(action ktesting.Action) (bool, runtime.Object, error) {
+func SecretDataReactor(action ktesting.Action) (bool, k8sruntime.Object, error) {
 	secret, ok := action.(ktesting.CreateAction).GetObject().(*v1.Secret)
 	if !ok {
 		return false, nil, fmt.Errorf("SecretDataReactor can only be applied on secrets")
@@ -1281,7 +1282,7 @@ func TestHttpCollector_parseTextResponse(t *testing.T) {
 	if !assert.NoError(t, err, "no error expected on http_collector creating") {
 		return
 	}
-	testResponse := []byte(`go1.13.15 linux/amd64`)
+	testResponse := []byte(fmt.Sprintf("go1.13.15 linux/%s", runtime.GOARCH))
 	res := &http.Response{
 		Body: io.NopCloser(bytes.NewBuffer(testResponse)),
 		Header: http.Header{
@@ -1316,5 +1317,5 @@ func TestHttpCollector_parseTextResponse(t *testing.T) {
 	assert.Equal(t, "go", metricLabels[0][0].Name[0])
 	assert.Equal(t, "os", metricLabels[0][0].Name[1])
 	assert.Equal(t, "1.13.15", metricLabels[0][0].Value[0])
-	assert.Equal(t, "linux/amd64", metricLabels[0][0].Value[1])
+	assert.Equal(t, fmt.Sprintf("linux/%s", runtime.GOARCH), metricLabels[0][0].Value[1])
 }

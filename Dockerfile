@@ -1,5 +1,8 @@
 # Build the manager binary
-FROM golang:1.24.2-alpine3.21 AS builder
+FROM --platform=$BUILDPLATFORM golang:1.24.2-alpine3.21 AS builder
+ARG BUILDPLATFORM
+ARG TARGETOS
+ARG TARGETARCH
 
 ENV SOURCES_DIR=./cmd/qubership-version-exporter \
     GO111MODULE=on
@@ -16,7 +19,7 @@ COPY pkg/ pkg/
 RUN go mod download
 
 # Run build
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o version_exporter ${SOURCES_DIR}/
+RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o version_exporter ${SOURCES_DIR}/
 
 # Use alpine tiny images as a base
 FROM alpine:3.21.3

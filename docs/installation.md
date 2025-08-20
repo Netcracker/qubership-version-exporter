@@ -1,7 +1,7 @@
 # Installation Notes
 
-This document provides information about the requirements, configuration, and steps to install Qubership-version-exporter to an
-environment.
+This document provides information about the requirements, configuration, and steps to install
+Qubership-version-exporter to an environment.
 
 ## Table of Contents
 
@@ -281,7 +281,8 @@ The JSONPath library used here is <https://kubernetes.io/docs/reference/kubectl/
 If you need to collect metrics with some empty values, use "{range ...} ... {end}" function.
 Some examples of range-end JSONPath function: ```{range .plugins[*]}{.unique_id}{.name}{.version}{end}```,
 ```{range @[*]}{.name}{.version}{end}```.
-Be careful, JSONPath with range function should not have plain text symbols, because qubership-version-exporter can not parse it.
+Be careful, JSONPath with range function should not have plain text symbols,
+because qubership-version-exporter can not parse it.
 Example of unsupported case: ```{range .items[*]}[{.metadata.name}, {.status.capacity}] {end}```.
 
 #### ConfigMap collector parameters

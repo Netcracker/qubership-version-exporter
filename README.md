@@ -4,7 +4,7 @@
 `Qubership-version-exporter` is a useful tool that allows you to get product, project, third-party versions of an application and
 store the results in custom Prometheus metrics. The exporter supports the following types of collectors:
 
-* Postgres collector which collects versions from Postgres database using sql queries,
+* Postgres collector which collects versions from Postgres database using SQL queries,
 * HTTP collector which collects versions by performing REST requests.
 * ConfigMap collector which collects versions from ConfigMaps and Secrets in Kubernetes.
 

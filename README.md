@@ -1,6 +1,12 @@
 # qubership-version-exporter
 
-[![Super-Linter](https://github.com/Netcracker/qubership-version-exporter/actions/workflows/super-linter.yaml/badge.svg)](https://github.com/marketplace/actions/super-linter)
+[![Super-Linter](https://github.com/Netcracker/qubership-version-exporter/actions/workflows/super-linter.yaml/badge.svg)](https://github.com/Netcracker/qubership-version-exporter/actions/workflows/super-linter.yaml)
+[![Go test](https://github.com/Netcracker/qubership-version-exporter/actions/workflows/go-test.yml/badge.svg)](https://github.com/Netcracker/qubership-version-exporter/actions/workflows/go-test.yml)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?metric=coverage&project=Netcracker_qubership-version-exporter)](https://sonarcloud.io/summary/overall?id=Netcracker_qubership-version-exporter)
+[![duplicated_lines_density](https://sonarcloud.io/api/project_badges/measure?metric=duplicated_lines_density&project=Netcracker_qubership-version-exporter)](https://sonarcloud.io/summary/overall?id=Netcracker_qubership-version-exporter)
+[![vulnerabilities](https://sonarcloud.io/api/project_badges/measure?metric=vulnerabilities&project=Netcracker_qubership-version-exporter)](https://sonarcloud.io/summary/overall?id=Netcracker_qubership-version-exporter)
+[![bugs](https://sonarcloud.io/api/project_badges/measure?metric=bugs&project=Netcracker_qubership-version-exporter)](https://sonarcloud.io/summary/overall?id=Netcracker_qubership-version-exporter)
+[![code_smells](https://sonarcloud.io/api/project_badges/measure?metric=code_smells&project=Netcracker_qubership-version-exporter)](https://sonarcloud.io/summary/overall?id=Netcracker_qubership-version-exporter)
 
 `Qubership-version-exporter` is a useful tool that allows you to get product, project, third-party versions of
 an application and store the results in custom Prometheus metrics.

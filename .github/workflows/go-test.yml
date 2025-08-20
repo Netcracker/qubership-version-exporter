@@ -1,4 +1,6 @@
 name: Go test
+permissions:
+  contents: read
 
 on:
   push:

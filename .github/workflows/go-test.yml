@@ -1,12 +1,9 @@
 name: Go test
-permissions:
-  contents: read
-
 on:
-  push:
   pull_request:
     types: [ opened, synchronize, reopened ]
-
+permissions:
+  contents: read
 jobs:
   test:
     uses: netcracker/qubership-core-infra/.github/workflows/go-build-with-sonar.yaml@v1.0.5

@@ -504,7 +504,7 @@ func (request *HttpRequest) sendMetrics(metricLabels [][]Labels, ch chan<- prome
 	}
 
 	for _, v := range cache {
-		v.MetricVec.Collect(ch)
+		v.Collect(ch)
 	}
 }
 

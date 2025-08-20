@@ -425,7 +425,7 @@ func (request *Request) sendMetrics(labels, labelValues []string, pgUrl string, 
 		labels,
 	)
 	buildInfo.WithLabelValues(labelValues...).Inc()
-	buildInfo.MetricVec.Collect(ch)
+	buildInfo.Collect(ch)
 }
 
 func deleteEmpty(s []string) []string {

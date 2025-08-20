@@ -425,7 +425,7 @@ func sendMetrics(labels, labelValues []string, r *Resource, ns v1.Namespace, ch 
 		labels,
 	)
 	buildInfo.WithLabelValues(labelValues...).Set(1)
-	buildInfo.MetricVec.Collect(ch)
+	buildInfo.Collect(ch)
 }
 
 func (cmCollector *CmCollector) Type() Type {

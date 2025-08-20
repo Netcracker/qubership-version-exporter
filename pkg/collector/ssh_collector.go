@@ -280,7 +280,11 @@ func (sshClient *SshClient) doScrape(ctx context.Context, ch chan<- prometheus.M
 		return
 	}
 
-	defer client.Close()
+	defer func() {
+		if err := client.Close(); err != nil {
+			errs = append(errs, err)
+		}
+	}()
 
 	for _, request := range sshClient.Requests {
 		var session *ssh.Session
@@ -394,7 +398,7 @@ func (request *CmdRequest) sendMetrics(metricLabels []Labels, ch chan<- promethe
 	}
 
 	for _, v := range cache {
-		v.MetricVec.Collect(ch)
+		v.Collect(ch)
 	}
 }
 

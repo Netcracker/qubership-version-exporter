@@ -110,8 +110,7 @@ func propertyTLSConfig() (t string, v validator.StructLevelFunc, rtr validator.R
 			if selector.CA.Key == "" || selector.CA.Name == "" {
 				sl.ReportError(selector, "tlsConfig", "TLSConfig", t, "parameters 'ca.key' or 'ca.name' must not be empty")
 			}
-			if !(selector.Cert.Key != "" && selector.Cert.Name != "" && selector.PKey.Key != "" && selector.PKey.Name != "") &&
-				!(selector.Cert.Key == "" && selector.Cert.Name == "" && selector.PKey.Key == "" && selector.PKey.Name == "") {
+			if !(selector.Cert.Key != "" && selector.Cert.Name != "" && selector.PKey.Key != "" && selector.PKey.Name != "") && !(selector.Cert.Key == "" && selector.Cert.Name == "" && selector.PKey.Key == "" && selector.PKey.Name == "") {
 				sl.ReportError(selector, "tlsConfig", "TLSConfig", t, "parameters 'cert' and 'pkey' are not full")
 			}
 		}

@@ -14,7 +14,7 @@ The results of versions collectors are processed, filtered and exposed as Promet
 
 This section contains documents of directories that describe `qubership-version-exporter`.
 
-* [Installation](documents/public/installation.md)
+* [Installation](docs/installation.md)
 
 ## Development
 Before push your commits and create PR run linters and test.

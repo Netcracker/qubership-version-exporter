@@ -567,7 +567,7 @@ func (httpCollector *HttpCollector) getCredentialsAndCertificates(config collect
 	tlsConfig := config.TlsConfig
 	if tlsConfig.TLSSkip {
 		tlsConf = &tls.Config{
-			InsecureSkipVerify: true,
+			InsecureSkipVerify: tlsConfig.TLSSkip,
 		}
 	} else if tlsConfig.CA.Name != "" && tlsConfig.CA.Key != "" && tlsConfig.Namespace != "" {
 		var caSecret *corev1.Secret

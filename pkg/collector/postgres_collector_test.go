@@ -320,28 +320,19 @@ func TestApplyMetricConfigEmptyMetrics(t *testing.T) {
 
 func Scrape(ctx context.Context, pgClient PostgresClient, t *testing.T) (labelPair []*dto.LabelPair) {
 	metricCh := make(chan prometheus.Metric)
-	endCh := make(chan struct{})
-	defer close(metricCh)
 
 	go func() {
 		err := pgClient.doScrape(ctx, metricCh)
 		assert.Empty(t, err)
-		close(endCh)
+		close(metricCh)
 	}()
 
-	for {
-		select {
-		case mt := <-metricCh:
-			metric := &dto.Metric{}
-			err := mt.Write(metric)
-			assert.Empty(t, err)
-			assert.True(t, len(metric.Label) > 1) // more than collector.commonLabel
-			labelPair = append(labelPair, metric.Label...)
-			continue
-		case <-endCh:
-			break
-		}
-		break
+	for mt := range metricCh {
+		metric := &dto.Metric{}
+		err := mt.Write(metric)
+		assert.Empty(t, err)
+		assert.True(t, len(metric.Label) > 1) // more than collector.commonLabel
+		labelPair = append(labelPair, metric.Label...)
 	}
 
 	return

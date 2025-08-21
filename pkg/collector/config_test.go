@@ -180,7 +180,7 @@ func TestLoadingEmptyConfig(t *testing.T) {
 
 	cfg, err := loadTestConfig(ctx, "emptyConfig.yaml", pgCollectorConfigPath)
 	assert.Error(t, err, "error expected on empty config loading")
-	assert.Equal(t, "config is empty!", err.Error())
+	assert.Equal(t, "config is empty", err.Error())
 	assert.Equal(t, 0, len(cfg.CollectorConfigs))
 }
 
@@ -701,7 +701,7 @@ func TestLoadingEmptySshConfig(t *testing.T) {
 
 	cfg, err := loadTestConfig(ctx, "emptyConfig.yaml", sshCollectorConfigPath)
 	assert.Error(t, err, "error expected on empty config loading")
-	assert.Equal(t, "config is empty!", err.Error())
+	assert.Equal(t, "config is empty", err.Error())
 	assert.Equal(t, 0, len(cfg.CollectorConfigs))
 }
 

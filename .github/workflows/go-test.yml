@@ -1,0 +1,14 @@
+name: Go test
+on:
+  pull_request:
+    types: [ opened, synchronize, reopened ]
+permissions:
+  contents: read
+jobs:
+  test:
+    uses: netcracker/qubership-core-infra/.github/workflows/go-build-with-sonar.yaml@7669d3c10f4c2ff2b4a5cbfee7e96b8fd3c06726 # v1.0.8
+    with:
+      actor: ${{ github.actor }}
+      sonar-project-key: ${{ vars.SONAR_PROJECT_KEY }}
+    secrets:
+      sonar-token: ${{ secrets.SONAR_TOKEN }}

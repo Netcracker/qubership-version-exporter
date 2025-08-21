@@ -103,7 +103,7 @@ func (c *Container) ReadConfig(ctx context.Context) error {
 	}
 
 	if configMap == nil {
-		return errors.New("config is empty!")
+		return errors.New("config is empty")
 	}
 
 	if len(c.CollectorConfigs) != 0 {

@@ -22,8 +22,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
-	"testing"
 	"runtime"
+	"testing"
 
 	"github.com/Netcracker/qubership-version-exporter/pkg/logger"
 	collectorModel "github.com/Netcracker/qubership-version-exporter/pkg/model/http"
@@ -236,7 +236,7 @@ var testResponseJson = []byte(`
     {
       "name": "ObfuscationPlugin",
       "author": "Qubership",
-      "url": "https://github.com/PROD.Platform.Logging/graylog-obfuscation-plugin",
+      "url": "https://github.com/Netcracker/qubership-graylog-obfuscation-plugin",
       "version": "1.1.0",
       "description": "Plugin for obfuscation input messages",
       "unique_id": "org.qubership.graylog2.plugin.ObfuscationPlugin",
@@ -272,7 +272,7 @@ var responseJsonNoName = []byte(`
     {
       "name": "ArchivingPlugin",
       "author": "Qubership",
-      "url": "https://github.com/PROD.Platform.Logging/graylog-archiving-plugin",
+      "url": "https://github.com/Netcracker/qubership-graylog-archiving-plugin",
       "version": "0.0.7",
       "description": "Plugin for archiving messages",
       "unique_id": "org.qubership.graylog2.plugin.ArchivingPlugin",
@@ -361,7 +361,7 @@ var responseJsonNoName = []byte(`
     {
       "name": "ObfuscationPlugin",
       "author": "Qubership",
-      "url": "https://github.com/PROD.Platform.Logging/graylog-obfuscation-plugin",
+      "url": "https://github.com/Netcracker/qubership-graylog-obfuscation-plugin",
       "version": "1.1.0",
       "description": "Plugin for obfuscation input messages",
       "unique_id": "org.qubership.graylog2.plugin.ObfuscationPlugin",
@@ -502,6 +502,7 @@ var pluginId = map[string]struct{}{
 	"vertamedia-clickhouse-datasource":   {},
 	"vonage-status-panel":                {},
 }
+
 // editorconfig-checker-enable
 
 // SecretDataReactor sets the secret.Data field based on the values from secret.StringData
@@ -566,14 +567,15 @@ func initMockK8sClient(ctx context.Context, caCert []byte) (*fake.Clientset, err
 func initMockServerHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodGet {
-			if r.URL.Path == "/version" {
+			switch r.URL.Path {
+			case "/version":
 				w.Header().Set("Content-Type", "application/json")
 				_, err := w.Write(testResponseJson)
 				if err != nil {
 					w.WriteHeader(http.StatusInternalServerError)
 				}
 				return
-			} else if r.URL.Path == "/version_text" {
+			case "/version_text":
 				_, err := w.Write(testResponseText)
 				if err != nil {
 					w.WriteHeader(http.StatusInternalServerError)
@@ -727,7 +729,6 @@ func TestHttpCollector_Scrape(t *testing.T) {
 	}
 
 	metricCh := make(chan prometheus.Metric)
-	endCh := make(chan struct{})
 	var metrics []*dto.Metric
 	defer close(metricCh)
 	go func() {
@@ -735,23 +736,16 @@ func TestHttpCollector_Scrape(t *testing.T) {
 		if !assert.NoError(t, errScrape, "no error expected on http_collector scraping") {
 			return
 		}
-		close(endCh)
+		close(metricCh)
 	}()
-	for {
-		select {
-		case mt := <-metricCh:
-			metric := &dto.Metric{}
-			errWrite := mt.Write(metric)
-			assert.Empty(t, errWrite)
-			assert.True(t, len(metric.Label) > 1) // more than collector.commonLabel
-			assert.NotNil(t, metric.Counter)
-			assert.True(t, metric.Counter.GetValue() >= 1)
-			metrics = append(metrics, metric)
-			continue
-		case <-endCh:
-			break
-		}
-		break
+	for mt := range metricCh {
+		metric := &dto.Metric{}
+		errWrite := mt.Write(metric)
+		assert.Empty(t, errWrite)
+		assert.True(t, len(metric.Label) > 1) // more than collector.commonLabel
+		assert.NotNil(t, metric.Counter)
+		assert.True(t, metric.Counter.GetValue() >= 1)
+		metrics = append(metrics, metric)
 	}
 
 	assert.Equal(t, 50, len(metrics))

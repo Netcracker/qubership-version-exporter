@@ -321,30 +321,21 @@ func TestK8SSshCollector_Scrape(t *testing.T) {
 
 func scrape(t *testing.T, ctx context.Context, sshClient *SshClient) (metrics []*dto.Metric) {
 	metricCh := make(chan prometheus.Metric)
-	endCh := make(chan struct{})
-	defer close(metricCh)
 
 	go func() {
 		err := sshClient.doScrape(ctx, metricCh)
 		assert.Empty(t, err)
-		close(endCh)
+		close(metricCh)
 	}()
 
-	for {
-		select {
-		case mt := <-metricCh:
-			metric := &dto.Metric{}
-			err := mt.Write(metric)
-			assert.Empty(t, err)
-			assert.True(t, len(metric.Label) > 1) // more than collector.commonLabel
-			assert.NotNil(t, metric.Counter)
-			assert.True(t, metric.Counter.GetValue() >= 1)
-			metrics = append(metrics, metric)
-			continue
-		case <-endCh:
-			break
-		}
-		break
+	for mt := range metricCh {
+		metric := &dto.Metric{}
+		err := mt.Write(metric)
+		assert.Empty(t, err)
+		assert.True(t, len(metric.Label) > 1) // more than collector.commonLabel
+		assert.NotNil(t, metric.Counter)
+		assert.True(t, metric.Counter.GetValue() >= 1)
+		metrics = append(metrics, metric)
 	}
 
 	return
@@ -428,7 +419,11 @@ func handleChannel(newChannel ssh.NewChannel) {
 	if err != nil {
 		log.Fatalf("Could not accept channel: %v", err)
 	}
-	defer channel.Close()
+	defer func() {
+		if err := channel.Close(); err != nil {
+			log.Fatalf("Could not close channel: %v", err)
+		}
+	}()
 
 	req := <-requests
 	if req.Type != "exec" {

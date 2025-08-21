@@ -1,21 +1,22 @@
 # Installation Notes
 
-This document provides information about the requirements, configuration, and steps to install Qubership-version-exporter to an
-environment.
+This document provides information about the requirements, configuration, and steps to install
+Qubership-version-exporter to an environment.
 
 ## Table of Contents
 
-* [Table of Contents](#table-of-contents)
-* [Inventory](#inventory)
-  * [Configuration](#configuration)
-    * [General Flags](#general-flags)
-    * [Postgres collector parameters](#postgres-collector-parameters)
-    * [HTTP requests collector parameters](#http-requests-collector-parameters)
-    * [ConfigMap collector parameters](#configmap-collector-parameters)
-    * [SSH collector parameters](#ssh-collector-parameters)
-* [Deploy](#deploy)
-  * [Manual deploy using Helm](#manual-deploy-using-helm)
-    * [Installing the Chart](#installing-the-chart)
+* [Installation Notes](#installation-notes)
+  * [Table of Contents](#table-of-contents)
+  * [Inventory](#inventory)
+    * [Configuration](#configuration)
+      * [General Flags](#general-flags)
+      * [Postgres collector parameters](#postgres-collector-parameters)
+      * [HTTP requests collector parameters](#http-requests-collector-parameters)
+      * [ConfigMap collector parameters](#configmap-collector-parameters)
+      * [SSH collector parameters](#ssh-collector-parameters)
+  * [Deploy](#deploy)
+    * [Manual deploy using Helm](#manual-deploy-using-helm)
+      * [Installing the Chart](#installing-the-chart)
 
 ## Inventory
 
@@ -27,12 +28,21 @@ and it`s collectors.
 This section provides information about all the parameters of `qubership-version-exporter`.
 The exporter provides the types of collectors:
 
-* [Postgres collector parameters](#postgres-collector-parameters)
-* [HTTP requests collector](#http-requests-collector-parameters)
-* [ConfigMap collector](#configmap-collector-parameters)
+* [Installation Notes](#installation-notes)
+  * [Table of Contents](#table-of-contents)
+  * [Inventory](#inventory)
+    * [Configuration](#configuration)
+      * [General Flags](#general-flags)
+      * [Postgres collector parameters](#postgres-collector-parameters)
+      * [HTTP requests collector parameters](#http-requests-collector-parameters)
+      * [ConfigMap collector parameters](#configmap-collector-parameters)
+      * [SSH collector parameters](#ssh-collector-parameters)
+  * [Deploy](#deploy)
+    * [Manual deploy using Helm](#manual-deploy-using-helm)
+      * [Installing the Chart](#installing-the-chart)
 
 #### General Flags
-<!-- markdownlint-disable line-length -->
+
 | Name               | Description                                           | Default value                    |
 | ------------------ | ----------------------------------------------------- | -------------------------------- |
 | log.level          | Logging verbosity                                     | info                             |
@@ -41,11 +51,9 @@ The exporter provides the types of collectors:
 | web.max-requests   | Maximum number of parallel scrape requests.           | 40 (0 means no limit is applied) |
 | config.file        | Path to a exporter configuration file.                | /config/exporterConfig.yaml      |
 
-<!-- markdownlint-enable line-length -->
-
 #### Postgres collector parameters
 
-Postgres collector is able to collect data from pg with sql requests provided in configuration and
+Postgres collector is able to collect data from pg with SQL requests provided in configuration and
 exposes it as prometheus metrics.
 
 The parameters of `Postgres collector` should be provided under the section:
@@ -71,18 +79,18 @@ version_exporter:
 | credentials.password.name    | Credentials for basic authentication. Secret name                                                                                                          | string | true     |
 | db                           | The database name.                                                                                                                                         | string | true     |
 | timeout                      | Max connection life time is the duration since creation after which a connection will be automatically closed.                                             | string | true     |
-| requests.sql                 | Postgres sql request                                                                                                                                       | string | true     |
+| requests.sql                 | Postgres SQL request                                                                                                                                       | string | true     |
 | requests.metricName          | Name of new Prometheus metric.                                                                                                                             | string | true     |
-| requests.metrics.fieldName   | Name of the field returned by sql request. It is to be unique. Either requests.metrics.label or requests.metrics.valueRegexp is to be used with this field | string | false    |
+| requests.metrics.fieldName   | Name of the field returned by SQL request. It is to be unique. Either requests.metrics.label or requests.metrics.valueRegexp is to be used with this field | string | false    |
 | requests.description         | Description of new Prometheus metric. Limit 100 symbols.                                                                                                   | string | false    |
 | requests.metrics.label       | Name of new Prometheus metric label. It is to be unique if defined.                                                                                        | string | false    |
-| requests.metrics.valueRegexp | Regular expression applied to results of sql request                                                                                                       | string | false    |
+| requests.metrics.valueRegexp | Regular expression applied to results of SQL request                                                                                                       | string | false    |
 <!-- markdownlint-enable line-length -->
 
 If requests.metrics.label is not defined, use as labels:
 
 1. Named group of regular expression
-2. Column name of sql request results
+2. Column name of SQL request results
 
 Example of configuration:
 
@@ -165,8 +173,8 @@ To one endpoint (`url`) can be sent one or more requests. A Prometheus metric ca
 If `metricName` is not filled, the results will be stored in metric with default name `http_collected_versions` with
 configured `labels`. `labels` section is required and `label.name` must be unique.
 
-If `Content-Type` of response is `application/json`, `label.jsonPath` value applied to this json and regular expression
-`label.valueRegexp` applied to result of jsonpath search.
+If `Content-Type` of response is `application/json`, `label.jsonPath` value applied to this JSON and regular expression
+`label.valueRegexp` applied to result of JSONPath search.
 If `Content-Type` of response is `text/plain`, `label.valueRegexp` applied to result.
 
 The parameters of `HTTP collector` should be provided under the section:
@@ -197,9 +205,9 @@ version_exporter:
 | `requests.method`             | Method of REST request. Possible values: `get/post`                                                                  | string | true     |
 | `requests.metricName`         | Name of new Prometheus metric.                                                                                       | string | true     |
 | `requests.description`        | Description of new Prometheus metric. Limit 100 symbols.                                                             | string | false    |
-| `requests.metrics.jsonPath`   | JsonPath expressions applied to response of Content-Type "application/json". Must be unique.                         | string | false    |
+| `requests.metrics.jsonPath`   | JSONPath expressions applied to response of Content-Type `application/json`. Must be unique.                         | string | false    |
 | `requests.labels.name`        | Name of label of new Prometheus metric. Must be unique.                                                              | string | true     |
-| `requests.labels.valueRegexp` | Regular expression applied to results of JsonPath search or to response of Content-Type "text/plain". Default: `.*`. | string | false    |
+| `requests.labels.valueRegexp` | Regular expression applied to results of JSONPath search or to response of Content-Type "text/plain". Default: `.*`. | string | false    |
 
 <!-- markdownlint-enable line-length -->
 
@@ -268,12 +276,13 @@ http_collector:
                 - name: version
 ```
 
-The jsonpath library used here is <https://kubernetes.io/docs/reference/kubectl/jsonpath>
+The JSONPath library used here is <https://kubernetes.io/docs/reference/kubectl/jsonpath>
 
 If you need to collect metrics with some empty values, use "{range ...} ... {end}" function.
-Some examples of range-end jsonpath function: ```{range .plugins[*]}{.unique_id}{.name}{.version}{end}```,
+Some examples of range-end JSONPath function: ```{range .plugins[*]}{.unique_id}{.name}{.version}{end}```,
 ```{range @[*]}{.name}{.version}{end}```.
-Be careful, jsonpath with range function should not have plain text symbols, because qubership-version-exporter can not parse it.
+Be careful, JSONPath with range function should not have plain text symbols,
+because qubership-version-exporter can not parse it.
 Example of unsupported case: ```{range .items[*]}[{.metadata.name}, {.status.capacity}] {end}```.
 
 #### ConfigMap collector parameters
@@ -300,8 +309,8 @@ version_exporter:
 <!-- markdownlint-disable line-length -->
 | Field                              | Description                                                                                                                                                                                                                                   | Scheme            | Required |
 | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- | -------- |
-| defaults                           | Default values for configuration. Can be overrided in the resources section for each resource. Most of fields in this section are mandatory.                                                                                                  | object            | true     |
-| defaults.type                      | Type of k8s resource. Allowed values: configmap, secret.                                                                                                                                                                                      | string            | true     |
+| defaults                           | Default values for configuration. Can be overridden in the resources section for each resource. Most of fields in this section are mandatory.                                                                                                  | object            | true     |
+| defaults.type                      | Type of k8s resource. Allowed values: `configmap`, secret.                                                                                                                                                                                      | string            | true     |
 | defaults.namespaces                | Namespaces in which to search for resources. Use empty list to search in all namespaces.                                                                                                                                                      | list[string]      | true     |
 | defaults.resourceLabels            | Allows to search resources by k8s labels instead of names. If resourceLabels is not empty, the search is carried out by labels, and not by the name of the resource.                                                                          | map[string]string | true     |
 | defaults.metricName                | Name of new Prometheus metric.                                                                                                                                                                                                                | string            | true     |
@@ -312,7 +321,7 @@ version_exporter:
 | defaults.labels[N].valueRegexp     | Regular expression that will be used to find version information in values of fields in Data from found ConfigMap or Secret. Each labels item must contain either the keyRegexp or the valueRegexp, but not both.                             | string            | false    |
 | resources                          | Each resource must contain the name parameter. Other fields are optional and override values from defaults section. If resourceLabels is empty, resource will be searched by name. Configuration must contain at least one item in this list. | list[object]      | true     |
 | resources[N].name                  | Name of resource. If resourceLabels is NOT empty, name parameter will not be used to find resources.                                                                                                                                          | string            | true     |
-| resources[N].type                  | Override value from defaults section. Allowed values: configmap, secret.                                                                                                                                                                      | string            | false    |
+| resources[N].type                  | Override value from defaults section. Allowed values: `configmap`, secret.                                                                                                                                                                      | string            | false    |
 | resources[N].namespaces            | Override value from defaults section.                                                                                                                                                                                                         | list[string]      | false    |
 | resources[N].resourceLabels        | Override value from defaults section.                                                                                                                                                                                                         | map[string]string | false    |
 | resources[N].metricName            | Override value from defaults section.                                                                                                                                                                                                         | string            | false    |

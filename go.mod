@@ -2,8 +2,6 @@ module github.com/Netcracker/qubership-version-exporter
 
 go 1.25.0
 
-toolchain go1.24.1
-
 require (
 	github.com/alecthomas/kingpin/v2 v2.4.0
 	github.com/driftprogramming/pgxpoolmock v1.1.0

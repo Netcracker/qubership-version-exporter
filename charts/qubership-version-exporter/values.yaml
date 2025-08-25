@@ -54,13 +54,13 @@ versionExporter:
   ## Ref: https://kubernetes.io/docs/user-guide/compute-resources/
   # Type: object
   # Mandatory: no
-  resources: {}
-  #  limits:
-  #    cpu: 200m
-  #    memory: 200Mi
-  #  requests:
-  #    cpu: 100m
-  #    memory: 100Mi
+  resources:
+    limits:
+      cpu: 200m
+      memory: 200Mi
+    requests:
+      cpu: 100m
+      memory: 100Mi
 
   # Security Context for a container.
   # Type: object

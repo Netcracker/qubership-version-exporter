@@ -190,7 +190,7 @@ func (spv *PostgresVersionScraper) InitPostgres(ctx context.Context, connOptions
 			}
 
 			if metric.Label != "" {
-				if model.LabelName(metric.Label).IsValid() {
+				if model.UTF8Validation.IsValidLabelName(metric.Label) {
 					l := model.LabelName(metric.Label)
 					label = &l
 				} else {

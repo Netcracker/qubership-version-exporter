@@ -38,11 +38,8 @@ jobs:
       fail-fast: false
       matrix:
         component:
-        - name: version-exporter
+        - name: qubership-version-exporter
           file: Dockerfile
-          context: .
-        - name: version-exporter-transfer
-          file: docker-transfer/Dockerfile
           context: .
     runs-on: ubuntu-latest
     name: ${{ matrix.component.name }}

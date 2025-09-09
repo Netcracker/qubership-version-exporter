@@ -42,7 +42,7 @@ func propertyValueRegexp() (t string, v validator.Func, cn bool, rtr validator.R
 func PropertyPrometheusLabelName() (t string, v validator.Func, cn bool, rtr validator.RegisterTranslationsFunc, tr validator.TranslationFunc) {
 	t = "prometheus_label_name"
 	v = func(fl validator.FieldLevel) bool {
-		valid := model.LabelName(fl.Field().String()).IsValid()
+		valid := model.UTF8Validation.IsValidLabelName(fl.Field().String())
 		return valid
 	}
 	rtr = func(ut ut.Translator) error {

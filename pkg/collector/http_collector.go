@@ -185,7 +185,7 @@ func (httpCollector *HttpCollector) InitializeConfig(metrics []collectorModel.Me
 		for _, label := range metric.Labels {
 			var name *model.LabelName
 			if label.Name != "" {
-				if model.LabelName(label.Name).IsValid() {
+				if model.UTF8Validation.IsValidLabelName(label.Name) {
 					l := model.LabelName(label.Name)
 					name = &l
 				} else {

@@ -526,7 +526,7 @@ func SecretDataReactor(action ktesting.Action) (bool, k8sruntime.Object, error) 
 }
 
 func initMockK8sClient(ctx context.Context, caCert []byte) (*fake.Clientset, error) {
-	clientSet := fake.NewSimpleClientset()
+	clientSet := fake.NewClientset()
 	clientSet.PrependReactor("create", "secrets", SecretDataReactor)
 
 	secret := &v1.Secret{

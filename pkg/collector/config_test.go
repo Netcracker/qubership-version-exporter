@@ -265,7 +265,7 @@ func TestLoadingInvalidConfig(t *testing.T) {
 
 func loadTestConfig(ctx context.Context, path string, configDirectory string) (*Container, error) {
 	configPath := filepath.Join("testdata", "config")
-	clientSet := fake.NewSimpleClientset()
+	clientSet := fake.NewClientset()
 	cc := NewConfigContainer(filepath.Join(configPath, configDirectory, path), "monitoring", clientSet, *logger.NewNopLogger())
 	err := cc.ReadConfig(ctx)
 	return cc, err

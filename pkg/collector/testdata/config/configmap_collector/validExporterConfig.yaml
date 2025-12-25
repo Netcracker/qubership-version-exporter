@@ -7,12 +7,12 @@ configmap_collector:
         metricName: configmap_collected_versions
         description: Metric shows version collected from configmaps
         labels:
-            - name: application_name
-              keyRegexp: '^([^\.]+)\.[^\.]+\.[^\.]+'
-            - name: date
-              keyRegexp: '^[^\.]+\.([^\.]+)\.[^\.]+'
-            - name: username
-              keyRegexp: '^[^\.]+\.[^\.]+\.([^\.]+)'
+            - keyRegexp: '^(.*?)\.\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}'
+              name: application_name
+            - keyRegexp: '^.*\.(\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}-\d{3})'
+              name: date
+            - keyRegexp: '^.*\.\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}-\d{3}\.([^:]+)'
+              name: username
             - name: application_version
               valueRegexp: '.*'
     resources:

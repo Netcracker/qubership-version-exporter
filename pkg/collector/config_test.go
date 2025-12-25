@@ -545,11 +545,11 @@ func TestConfigmapCollectorConfig(t *testing.T) {
 	defaultLabels := configmapDefaults.Labels
 	assert.Equal(t, 4, len(defaultLabels))
 	assert.Equal(t, "application_name", defaultLabels[0].Name)
-	assert.Equal(t, "^([^\\.]+)\\.[^\\.]+\\.[^\\.]+", defaultLabels[0].KeyRegexp)
+	assert.Equal(t, "^(.*?)\\.\\d{4}-\\d{2}-\\d{2}-\\d{2}-\\d{2}-\\d{2}", defaultLabels[0].KeyRegexp)
 	assert.Equal(t, "date", defaultLabels[1].Name)
-	assert.Equal(t, "^[^\\.]+\\.([^\\.]+)\\.[^\\.]+", defaultLabels[1].KeyRegexp)
+	assert.Equal(t, "^.*\\.(\\d{4}-\\d{2}-\\d{2}-\\d{2}-\\d{2}-\\d{2}-\\d{3})", defaultLabels[1].KeyRegexp)
 	assert.Equal(t, "username", defaultLabels[2].Name)
-	assert.Equal(t, "^[^\\.]+\\.[^\\.]+\\.([^\\.]+)", defaultLabels[2].KeyRegexp)
+	assert.Equal(t, "^.*\\.\\d{4}-\\d{2}-\\d{2}-\\d{2}-\\d{2}-\\d{2}-\\d{3}\\.([^:]+)", defaultLabels[2].KeyRegexp)
 	assert.Equal(t, "application_version", defaultLabels[3].Name)
 	assert.Equal(t, ".*", defaultLabels[3].ValueRegexp)
 

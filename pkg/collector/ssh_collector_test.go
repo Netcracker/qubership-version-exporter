@@ -470,7 +470,7 @@ func handleChannel(newChannel ssh.NewChannel) {
 }
 
 func initK8sClient(ctx context.Context, privateKey []byte) (*fake.Clientset, error) {
-	clientSet := fake.NewSimpleClientset()
+	clientSet := fake.NewClientset()
 	clientSet.PrependReactor("create", "secrets", SecretDataReactor)
 
 	secret := &v1.Secret{

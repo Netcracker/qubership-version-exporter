@@ -7,7 +7,7 @@ permissions:
   contents: read
 jobs:
   test:
-    uses: netcracker/qubership-core-infra/.github/workflows/go-build-with-sonar.yaml@024527ca0ec0b81dcdb6cd31448560293808628a # v1.2.1
+    uses: netcracker/qubership-core-infra/.github/workflows/go-build-with-sonar.yaml@967be79d91d067ccca541dcdecc952b911fb9e80 # v1.3.0
     with:
       actor: ${{ github.actor }}
       sonar-project-key: ${{ vars.SONAR_PROJECT_KEY }}

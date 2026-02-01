@@ -18,7 +18,7 @@ COPY pkg/ pkg/
 RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o version_exporter ${SOURCES_DIR}/
 
 # Use alpine tiny images as a base
-FROM alpine:3.23.2
+FROM alpine:3.23.3
 
 ENV USER_UID=2001 \
     USER_NAME=appuser \

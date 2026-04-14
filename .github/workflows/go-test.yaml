@@ -6,8 +6,6 @@ on:
 
 permissions:
   contents: read
-  pull-requests: write
-  packages: write
 jobs:
   prepare:
     runs-on: ubuntu-latest
@@ -43,3 +41,7 @@ jobs:
       cover-packages: './pkg/...'
       skip-docker: true
     secrets: inherit
+    permissions:
+      contents: read
+      pull-requests: write
+      packages: write

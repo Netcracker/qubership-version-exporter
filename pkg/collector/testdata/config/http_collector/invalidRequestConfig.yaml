@@ -1,0 +1,23 @@
+http_collector:
+  connections:
+    - url: https://x.x.x.x:6300
+      tlsConfig:
+        tlsSkip: false
+        ca:
+          key: cert-ca.pem
+          name: secret-certificate-authority
+        cert:
+          key: cert.crt
+      credentials:
+        token:
+          key: token
+          name: secret-name
+      requests:
+        - path: /version
+          metricName: "A newMetric!"
+        - path: /versions
+          method: "delete"
+          metrics:
+            - jsonPath: $.go.goVersion
+              labels:
+                - name: goVersion

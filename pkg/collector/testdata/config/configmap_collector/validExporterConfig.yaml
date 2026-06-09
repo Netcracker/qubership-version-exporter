@@ -1,0 +1,30 @@
+configmap_collector:
+    defaults:
+        type: configmap
+        namespaces:
+            - monitoring
+        resourceLabels: {}
+        metricName: configmap_collected_versions
+        description: Metric shows version collected from configmaps
+        labels:
+            - keyRegexp: '^(.*?)\.\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}'
+              name: application_name
+            - keyRegexp: '^.*\.(\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}-\d{3})'
+              name: date
+            - keyRegexp: '^.*\.\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}-\d{3}\.([^:]+)'
+              name: username
+            - name: application_version
+              valueRegexp: '.*'
+    resources:
+        - name: version-configmap-test
+          namespaces: []
+          resourceLabels:
+              label-key: label-value
+          metricName: configmap_versions
+          description: Help
+          labels:
+              - name: label
+                keyRegexp: .*
+        - name: version-secret-test
+          type: secret
+        - name: version-default-configmap

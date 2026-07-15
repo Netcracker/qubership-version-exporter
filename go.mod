@@ -18,7 +18,7 @@ require (
 	github.com/prometheus/common v0.67.5
 	github.com/prometheus/exporter-toolkit v0.16.0
 	github.com/stretchr/testify v1.11.1
-	golang.org/x/crypto v0.51.0
+	golang.org/x/crypto v0.52.0
 	gopkg.in/yaml.v2 v2.4.0
 	k8s.io/api v0.36.1
 	k8s.io/apimachinery v0.36.1

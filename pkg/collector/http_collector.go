@@ -516,7 +516,7 @@ func (httpCollector *HttpCollector) setAuthHeader(requestObj *HttpRequest, reque
 			b.WriteString(base64.StdEncoding.EncodeToString([]byte(
 				fmt.Sprintf("%s:%s", requestObj.auth.name, requestObj.auth.password))))
 		} else if requestObj.auth.token != "" {
-			b.WriteString(fmt.Sprintf("Bearer %s", requestObj.auth.token))
+			fmt.Fprintf(&b, "Bearer %s", requestObj.auth.token)
 		}
 		request.Header.Add("Authorization", b.String())
 	}
